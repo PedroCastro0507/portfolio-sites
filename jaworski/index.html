@@ -72,7 +72,9 @@ h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,5.2vw,4.2rem)
 .sec{padding:96px 0}
 .sec h2{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,3.8vw,3rem);line-height:1.08;letter-spacing:-.01em;margin:0 0 14px;color:var(--floresta-2)}
 .intro{color:var(--cinza);font-size:1.1rem;max-width:52ch;margin:0}
-.cab{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:44px}
+.cab{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:44px;max-width:640px}
+.cab h2{margin:0}
+.cab .intro{max-width:50ch}
 .cab>*{min-width:0}
 
 /* tratamentos: protocolo em destaque + lista */
@@ -103,7 +105,7 @@ h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,5.2vw,4.2rem)
 /* sobre */
 .sobre{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
 .sobre>*{min-width:0}
-.foto-dr{position:relative;aspect-ratio:4/5;border-radius:22px;background:var(--menta-2) url(https://images.unsplash.com/photo-1606811856475-5e6fcdc6e509?auto=format&fit=crop&q=80&w=900) center/cover;box-shadow:var(--sombra);margin:0}
+.foto-dr{position:relative;aspect-ratio:4/5;border-radius:22px;background:#E6DDD3 url(dr-mario.jpg) center 20%/cover;box-shadow:var(--sombra);margin:0}
 .foto-dr figcaption{position:absolute;left:16px;right:16px;bottom:16px;background:rgba(255,255,255,.94);border-radius:14px;padding:12px 16px;font-size:.9rem}
 .foto-dr figcaption b{display:block;font-family:var(--serif);font-weight:500;font-size:1.1rem}
 .frase{font-family:var(--serif);font-size:clamp(1.4rem,2.4vw,1.8rem);line-height:1.3;color:var(--floresta-2);margin:0 0 20px}
@@ -115,7 +117,10 @@ h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,5.2vw,4.2rem)
 /* unidades */
 .unidades{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .un{background:#fff;border-radius:22px;box-shadow:var(--sombra);overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.un .foto{height:220px;background:var(--menta-2) center/cover}
+.un .mapa{position:relative;height:250px;background:var(--menta-2)}
+.un .mapa iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.8)}
+.un .mapa .toque{display:none;position:absolute;inset:0}
+.nw{white-space:nowrap}
 .un .corpo{padding:26px;display:flex;flex-direction:column;gap:6px;flex:1}
 .un h3{font-family:var(--serif);font-weight:500;font-size:1.6rem;margin:0}
 .un p{margin:0;color:var(--cinza)}
@@ -148,6 +153,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
 .rodape{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;padding:22px 0 calc(22px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.15);font-size:.85rem;opacity:.7}
 .rodape a{text-decoration:underline}
 
+.barra{display:none}
 .zap{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;box-shadow:0 10px 28px rgba(0,0,0,.22);transition:transform .2s,opacity .2s}
 
 @media (max-width:900px){
@@ -163,9 +169,27 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   .sec{padding:72px 0}
   .contatos{grid-template-columns:1fr;gap:18px;margin-top:56px}
   .fim{padding-top:72px}
-  .rodape{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-  .zap:not(.on){opacity:0;pointer-events:none;transform:translateY(12px)}
+  .zap{display:none}
+  .barra{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px));background:rgba(251,252,250,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--linha);transition:transform .25s}
+  .barra:not(.on){transform:translateY(110%)}
+  .barra .btn{min-height:50px;padding:0 14px}
+  .barra .zapb{background:#1F8F4E}
+  .rodape{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  .hero .acoes .btn{flex:1 1 100%}
+  .destaque{min-height:380px}
+  .rolo{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -24px;padding:4px 24px 18px;scroll-padding:0 24px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .rolo::-webkit-scrollbar{display:none}
+  .rolo>li{flex:0 0 78%;scroll-snap-align:start}
+  .lista-t.rolo{background:transparent;box-shadow:none;border-radius:0}
+  .lista-t.rolo li{grid-template-columns:1fr;gap:12px;background:#fff;border:0;border-radius:18px;box-shadow:0 1px 2px rgba(23,36,29,.05),0 10px 26px rgba(23,36,29,.08);padding:22px}
+  .lista-t.rolo li:last-child{border-bottom:0}
+  .trat{gap:16px}
+  .dica{display:flex!important}
+  .un .mapa{height:210px}
+  .un .mapa iframe{pointer-events:none}
+  .un .mapa .toque{display:block}
 }
+.dica{display:none;align-items:center;gap:8px;margin:2px 0 0;font-size:.85rem;color:var(--cinza)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
@@ -202,7 +226,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   <div class="cab"><h2>Do check-up ao sorriso novo</h2><p class="intro">Tratamentos feitos na própria clínica, com a mesma equipe acompanhando cada etapa.</p></div>
   <div class="trat">
     <a class="destaque" href="#protocolo"><div><h3>Protocolo sobre implante</h3><p>Dentes fixos parafusados em implantes, para quem usa dentadura ou perdeu vários dentes e quer voltar a comer e sorrir com segurança.</p><span class="btn">Como funciona</span></div></a>
-    <ul class="lista-t">
+    <ul class="lista-t rolo">
       <li><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3c-2.5 0-4 2-4 4.5 0 3 1.5 5 2 8 .4 2.5.8 5.5 2 5.5s1.5-3 2-5c.4-1.4 1.4-1.4 1.8 0 .5 2 .8 5 2 5s1.6-3 2-5.5c.5-3 2-5 2-8C19.8 5 18.3 3 15.8 3c-1.6 0-2.4 1-3.9 1S9.6 3 8 3Z" fill="none" stroke="#2E695C" stroke-width="1.8" stroke-linejoin="round"/></svg></span><div><h3>Implantes</h3><p>Reposição de um ou mais dentes, com planejamento antes da cirurgia.</p></div></li>
       <li><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="#2E695C" stroke-width="1.8"/><path d="M8.5 12.5l2.3 2.3 4.7-5" fill="none" stroke="#2E695C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>Clínica geral</h3><p>Check-up, limpeza, restaurações, canal e extrações.</p></div></li>
       <li><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#2E695C" stroke-width="1.8" stroke-linecap="round"/></svg></span><div><h3>Clareamento</h3><p>Caseiro ou no consultório, com avaliação antes de começar.</p></div></li>
@@ -214,17 +238,18 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
 
 <section class="sec passos-faixa" id="protocolo"><div class="w">
   <div class="cab"><h2>Como é o caminho até o protocolo</h2><p class="intro">Cada caso é avaliado com calma. Você sabe o que vai acontecer antes de começar.</p></div>
-  <ol class="passos">
+  <ol class="passos rolo">
     <li><b>Avaliação</b><p>Conversa, exame da boca e pedido de exames de imagem.</p></li>
     <li><b>Planejamento</b><p>O plano é explicado etapa por etapa, com prazos e valores antes de iniciar.</p></li>
     <li><b>Implantes</b><p>Instalação dos implantes, com anestesia e acompanhamento depois do procedimento.</p></li>
     <li><b>Dentes fixos</b><p>A prótese é parafusada nos implantes e ajustada até ficar confortável.</p></li>
   </ol>
+  <p class="dica" aria-hidden="true">Deslize para ver as etapas →</p>
   <p class="nota">O tempo de cada etapa depende do seu caso e é combinado na avaliação.</p>
 </div></section>
 
 <section class="sec" id="equipe"><div class="w sobre">
-  <figure class="foto-dr"><div></div><figcaption><b>Dr. Mário Eduardo Jaworski</b>Cirurgião-dentista, CRO-PR 9026 · aqui entra a foto dele</figcaption></figure>
+  <figure class="foto-dr"><div></div><figcaption><b>Dr. Mário Eduardo Jaworski</b>Cirurgião-dentista · CRO-PR 9026</figcaption></figure>
   <div>
     <h2>Quem cuida de você</h2>
     <p class="frase">"Cuidar com carinho e amor do sorriso, a curva mais bonita do ser humano."</p>
@@ -237,8 +262,8 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
 <section class="sec" id="unidades" style="padding-top:0"><div class="w">
   <div class="cab"><h2>Duas unidades, a mesma equipe</h2><p class="intro">Escolha a mais perto de você. O agendamento é pelo mesmo WhatsApp.</p></div>
   <div class="unidades">
-    <article class="un"><div class="foto" style="background-image:url(https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=900)" role="img" aria-label="Consultório"></div><div class="corpo"><h3>Jaworski Odontologia</h3><p>R. Dias da Rocha Filho, 1399, Alto da XV, Curitiba</p><p>Seg. a sex., 8h30 às 18h30 · (41) 3086-2636</p><div class="acoes"><a class="btn zaplink" href="#">Agendar</a><a class="btn claro" href="https://www.google.com/maps/search/?api=1&query=Jaworski+Odontologia+Rua+Dias+da+Rocha+Filho+1399+Curitiba" target="_blank" rel="noopener">Como chegar</a></div></div></article>
-    <article class="un"><div class="foto" style="background-image:url(https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=900)" role="img" aria-label="Exame odontológico"></div><div class="corpo"><h3>Odonto Pinhais</h3><p>Av. Iraí, 1098 A, Weissópolis, Pinhais</p><p>Seg. a sex., 8h30 às 12h e 14h às 18h30 · (41) 3033-2636</p><div class="acoes"><a class="btn zaplink" href="#">Agendar</a><a class="btn claro" href="https://www.google.com/maps/search/?api=1&query=Odonto+Pinhais+Avenida+Ira%C3%AD+1098+Pinhais" target="_blank" rel="noopener">Como chegar</a></div></div></article>
+    <article class="un"><div class="mapa"><iframe title="Mapa da Jaworski Odontologia" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Jaworski+Odontologia+Dr+Mario+Jaworski%2C+Curitiba&z=16&hl=pt-BR&output=embed"></iframe><a class="toque" href="https://www.google.com/maps/search/?api=1&query=Jaworski+Odontologia+Rua+Dias+da+Rocha+Filho+1399+Curitiba" target="_blank" rel="noopener" aria-label="Abrir no Google Maps"></a></div><div class="corpo"><h3>Jaworski Odontologia</h3><p>R. Dias da Rocha Filho, 1399, Alto da XV, Curitiba</p><p>Seg. a sex., 8h30 às 18h30 · <span class="nw">(41) 3086-2636</span></p><div class="acoes"><a class="btn zaplink" href="#">Agendar</a><a class="btn claro" href="https://www.google.com/maps/search/?api=1&query=Jaworski+Odontologia+Rua+Dias+da+Rocha+Filho+1399+Curitiba" target="_blank" rel="noopener">Como chegar</a></div></div></article>
+    <article class="un"><div class="mapa"><iframe title="Mapa da Odonto Pinhais" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Odonto+Pinhais+Dr+Mario+Jaworski%2C+Pinhais&z=16&hl=pt-BR&output=embed"></iframe><a class="toque" href="https://www.google.com/maps/search/?api=1&query=Odonto+Pinhais+Avenida+Ira%C3%AD+1098+Pinhais" target="_blank" rel="noopener" aria-label="Abrir no Google Maps"></a></div><div class="corpo"><h3>Odonto Pinhais</h3><p>Av. Iraí, 1098 A, Weissópolis, Pinhais</p><p>Seg. a sex., 8h30 às 12h e 14h às 18h30 · <span class="nw">(41) 3033-2636</span></p><div class="acoes"><a class="btn zaplink" href="#">Agendar</a><a class="btn claro" href="https://www.google.com/maps/search/?api=1&query=Odonto+Pinhais+Avenida+Ira%C3%AD+1098+Pinhais" target="_blank" rel="noopener">Como chegar</a></div></div></article>
   </div>
 </div></section>
 
@@ -260,13 +285,14 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
     <p>Mande uma mensagem com o melhor dia e a unidade. A equipe confirma o horário com você.</p>
     <div class="acoes"><a class="btn zaplink" href="#">Agendar pelo WhatsApp</a><a class="btn claro" href="tel:+554130862636">Ligar para a clínica</a></div>
     <div class="contatos">
-      <div><small>WhatsApp</small><p>(41) 9910-2636</p></div>
-      <div><small>Alto da XV, Curitiba</small><p>R. Dias da Rocha Filho, 1399<br>(41) 3086-2636</p></div>
-      <div><small>Pinhais</small><p>Av. Iraí, 1098 A, Weissópolis<br>(41) 3033-2636</p></div>
+      <div><small>WhatsApp</small><p><span class="nw">(41) 9910-2636</span></p></div>
+      <div><small>Alto da XV, Curitiba</small><p>R. Dias da Rocha Filho, 1399<br><span class="nw">(41) 3086-2636</span></p></div>
+      <div><small>Pinhais</small><p>Av. Iraí, 1098 A, Weissópolis<br><span class="nw">(41) 3033-2636</span></p></div>
     </div>
     <div class="rodape"><span>Jaworski Odontologia e Odonto Pinhais · Responsável técnico: Dr. Mário Eduardo Jaworski, CRO-PR 9026 · <a href="https://www.instagram.com/jaworskiodontologia/" target="_blank" rel="noopener">@jaworskiodontologia</a></span><span>Rascunho para aprovação · site feito por <a href="https://pedrocastro0507.github.io/portfolio-sites/">Pedro Castro</a></span></div>
   </div>
 </footer>
+<div class="barra" aria-label="Contato rápido"><a class="btn zapb zaplink" href="#">WhatsApp</a><a class="btn claro" href="tel:+554130862636">Ligar</a></div>
 <a class="zap zaplink" href="#" aria-label="Conversar no WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.2Z"/></svg></a>
 <script>
 (function(){
@@ -281,7 +307,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   var bt=document.querySelectorAll(".abas button"),st=document.getElementById("status");
   function mostra(i){var u=U[i];bt.forEach(function(b,k){b.setAttribute("aria-selected",k==i)});document.getElementById("foto-u").style.backgroundImage="url("+u.f+")";document.getElementById("u-nome").textContent=u.n;document.getElementById("u-end").textContent=u.e;document.getElementById("u-hor").textContent=u.h;var ag=document.getElementById("u-ag");ag.textContent=u.a;ag.href=link(u.c);var s=status(u);st.classList.toggle("fechada",!s[0]);st.lastElementChild.textContent=s[1]}
   bt.forEach(function(b){b.addEventListener("click",function(){mostra(+b.dataset.u)})});mostra(0);
-  var z=document.querySelector(".zap");function r(){z.classList.toggle("on",scrollY>400)}addEventListener("scroll",r,{passive:true});r();
+  var z=document.querySelector(".zap"),bb=document.querySelector(".barra");function r(){var on=scrollY>400;z.classList.toggle("on",on);bb.classList.toggle("on",on)}addEventListener("scroll",r,{passive:true});r();
 })();
 </script>
 </body>
