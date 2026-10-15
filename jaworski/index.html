@@ -172,6 +172,8 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   .zap{display:none}
   .barra{display:grid;grid-template-columns:1fr 52px;gap:6px;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;padding:6px;border-radius:999px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(23,36,29,.08);box-shadow:0 14px 34px rgba(23,36,29,.18);transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s}
   .barra:not(.on){transform:translateY(140%);opacity:0}
+  .topo .btn{transition:opacity .25s,transform .25s}
+  body.ilha .topo .btn{opacity:0;pointer-events:none;transform:translateY(-6px)}
   .barra .btn{min-height:48px;border-radius:999px;padding:0 16px}
   .barra .zapb{background:#1F8F4E}
   .barra .tel{padding:0;background:var(--menta);box-shadow:none}
@@ -313,7 +315,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   var bt=document.querySelectorAll(".abas button"),st=document.getElementById("status");
   function mostra(i){var u=U[i];bt.forEach(function(b,k){b.setAttribute("aria-selected",k==i)});document.getElementById("foto-u").style.backgroundImage="url("+u.f+")";document.getElementById("u-nome").textContent=u.n;document.getElementById("u-end").textContent=u.e;document.getElementById("u-hor").textContent=u.h;var ag=document.getElementById("u-ag");ag.textContent=u.a;ag.href=link(u.c);var s=status(u);st.classList.toggle("fechada",!s[0]);st.lastElementChild.textContent=s[1]}
   bt.forEach(function(b){b.addEventListener("click",function(){mostra(+b.dataset.u)})});mostra(0);
-  var z=document.querySelector(".zap"),bb=document.querySelector(".barra");function r(){var on=scrollY>400;z.classList.toggle("on",on);bb.classList.toggle("on",on)}addEventListener("scroll",r,{passive:true});r();
+  var z=document.querySelector(".zap"),bb=document.querySelector(".barra");function r(){var on=scrollY>400;z.classList.toggle("on",on);bb.classList.toggle("on",on);document.body.classList.toggle("ilha",on)}addEventListener("scroll",r,{passive:true});r();
 })();
 </script>
 </body>
