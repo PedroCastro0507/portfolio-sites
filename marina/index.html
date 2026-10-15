@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14201A">
+<title>Marina Rocha Nutrição · Curitiba</title>
+<meta name="description" content="Projeto conceito de Pedro Castro: site de nutricionista no estilo vidro (liquid glass). Dados fictícios.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300..800&display=swap">
+<style>
+/* Modelo Vidro: foto em tela cheia no topo, cartões de vidro fosco por cima de cor viva ao fundo */
+:root{
+  --fundo:#14201A; --tinta:#FFFFFF; --suave:rgba(255,255,255,.72); --fraco:rgba(255,255,255,.5);
+  --verde:#C8E6A0; --coral:#FF8A65;
+  --f:"Inter Tight","SF Pro Display",-apple-system,system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--fundo);color:var(--tinta);font-family:var(--f);font-size:1.0625rem;line-height:1.55;overflow-x:hidden}
+p{text-wrap:pretty}h1,h2,h3{text-wrap:balance;font-weight:600;letter-spacing:-.035em}
+a{color:inherit;text-decoration:none}
+.w{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:12px}
+
+/* vidro */
+.vidro{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(255,255,255,.1),0 10px 40px rgba(0,0,0,.25);overflow:hidden}
+.vidro::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 60% at 20% 0%,rgba(255,255,255,.28),transparent 60%);border-radius:inherit}
+.vidro > *{position:relative}
+
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:54px;padding:6px 8px 6px 24px;border-radius:999px;font-weight:600;font-size:1rem;color:#fff;transition-property:transform;transition-duration:.15s}
+.btn:active{transform:scale(.97)}
+.btn .seta{width:40px;height:40px;border-radius:50%;background:#fff;color:#14201A;display:grid;place-items:center;flex:none}
+.btn.cheio{background:#fff;color:#14201A}
+.btn.cheio .seta{background:#14201A;color:#fff}
+
+/* cabeçalho em pílula de vidro */
+.topo{position:fixed;left:0;right:0;top:calc(14px + env(safe-area-inset-top,0px));z-index:30}
+.topo .barra{display:flex;align-items:center;justify-content:space-between;gap:16px;border-radius:999px;padding:8px 8px 8px 22px}
+.marca{font-weight:650;letter-spacing:-.02em;font-size:1.08rem;white-space:nowrap}
+.marca span{font-weight:400;opacity:.7}
+.topo nav{display:flex;gap:26px;font-size:.94rem;color:var(--suave)}
+.topo nav a{padding-block:10px}
+.topo nav a:hover{color:#fff}
+.topo .ag{min-height:42px;padding:0 20px;border-radius:999px;background:#fff;color:#14201A;font-weight:600;font-size:.94rem;display:inline-flex;align-items:center}
+
+/* topo em foto cheia */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:120px 0 48px;background:#2A2A22 url(https://images.unsplash.com/photo-1599652293157-3069d17f4654?auto=format&fit=crop&q=80&w=2000) center 78%/cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,16,12,.35) 0%,rgba(10,16,12,0) 30%,rgba(10,16,12,.15) 55%,rgba(20,32,26,.92) 100%)}
+.hero .w{position:relative;z-index:1;width:100%;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:end}
+.hero .w > *{min-width:0}
+.hero h1{font-size:clamp(3rem,8vw,6.6rem);line-height:.92;margin:0 0 22px;font-weight:600}
+.hero .sub{font-size:1.15rem;color:rgba(255,255,255,.85);max-width:40ch;margin:0 0 30px}
+.flutua{display:grid;gap:14px;justify-items:end}
+.mini{border-radius:24px;padding:16px 20px;display:flex;align-items:center;gap:14px;min-width:250px}
+.mini b{display:block;font-size:1.02rem}
+.mini span{font-size:.88rem;color:var(--suave)}
+.mini .pt{width:10px;height:10px;border-radius:50%;background:#5EE08A;box-shadow:0 0 0 5px rgba(94,224,138,.2);flex:none}
+.mini .ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+
+/* fundo vivo das seções (cores que o vidro desfoca) */
+.palco{position:relative;isolation:isolate;overflow:hidden;overflow-x:clip;overflow-y:visible}
+.mancha{position:absolute;z-index:-1;border-radius:50%;filter:blur(70px);opacity:.75}
+.m1{width:520px;height:520px;background:#3F7A4E;left:-160px;top:120px}
+.m2{width:460px;height:460px;background:#C2643F;right:-140px;top:900px}
+.m3{width:560px;height:560px;background:#5C8C3A;left:20%;top:1900px}
+.m4{width:420px;height:420px;background:#B5884A;right:-100px;top:2900px}
+.foto-fundo{position:absolute;z-index:-1;border-radius:40px;background-size:cover;background-position:center;opacity:.9}
+
+.sec{padding-top:120px}
+.sec h2{font-size:clamp(2.2rem,4.6vw,3.6rem);line-height:1;margin:0 0 16px}
+.intro{color:var(--suave);font-size:1.12rem;max-width:48ch;margin:0}
+.cab{display:flex;justify-content:space-between;align-items:end;gap:24px 40px;flex-wrap:wrap;margin-bottom:44px}
+
+.numeros{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.numeros > div{border-radius:26px;padding:24px;min-width:0}
+.numeros b{display:block;font-size:2.1rem;letter-spacing:-.04em;font-weight:600;line-height:1.1}
+.numeros span{color:var(--suave);font-size:.95rem}
+
+.sobre{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch}
+.sobre > *{min-width:0}
+.sobre .foto{border-radius:32px;min-height:520px;background:#2c3a2f url(https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&q=80&w=1100) center/cover;position:relative;overflow:hidden}
+.sobre .foto .mini{position:absolute;left:16px;right:16px;bottom:16px;min-width:0}
+.sobre .texto{border-radius:32px;padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;justify-content:center}
+.sobre .texto p{color:var(--suave);margin:0 0 14px}
+.sobre .frase{font-size:clamp(1.4rem,2.4vw,1.8rem);line-height:1.25;color:#fff;letter-spacing:-.02em;font-weight:500;margin-bottom:22px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding:0;list-style:none}
+.tags li{border-radius:999px;padding:8px 14px;font-size:.88rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)}
+
+.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.area{border-radius:30px;padding:30px;min-width:0;display:flex;flex-direction:column;gap:12px;min-height:280px}
+.area .ic{width:48px;height:48px;border-radius:16px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.area h3{font-size:1.45rem;margin:auto 0 0}
+.area p{margin:0;color:var(--suave)}
+
+.passos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:p}
+.passos li{counter-increment:p;border-radius:28px;padding:26px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.passos li > small{position:static;padding-right:56px}
+.passos small::before{content:"0" counter(p);position:absolute;top:22px;right:24px;font-size:1.5rem;font-weight:600;letter-spacing:-.03em;line-height:1;color:var(--verde)}
+.passos b{font-size:1.15rem}
+.passos small{color:var(--fraco);font-size:.88rem}
+.passos p{margin:0;color:var(--suave);font-size:.97rem}
+
+.formatos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.formatos > div{border-radius:30px;padding:32px;min-width:0}
+.formatos h3{font-size:1.6rem;margin:0 0 6px}
+.formatos > div > p{color:var(--suave);margin:0 0 18px}
+.formatos ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.formatos li{display:flex;gap:12px}
+.formatos li::before{content:"";flex:none;width:6px;height:6px;margin-top:.62em;border-radius:50%;background:var(--verde)}
+
+.duv{display:grid;gap:12px;max-width:820px}
+details{border-radius:24px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;font-weight:600;font-size:1.06rem;min-height:56px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:400;font-size:1.3rem;line-height:1;transition-property:transform;transition-duration:.25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0;padding:0 24px 22px;color:var(--suave)}
+
+.fim{padding-block:120px}
+.cta{position:relative;border-radius:40px;overflow:hidden;min-height:480px;display:grid;place-items:center;text-align:center;padding:48px 20px;background:#2a2a22 url(https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1800) center/cover}
+.cta .vidro{background:linear-gradient(135deg,rgba(20,32,26,.38),rgba(20,32,26,.22));text-shadow:0 1px 12px rgba(0,0,0,.25);border-radius:32px;padding:clamp(28px,5vw,52px);max-width:620px}
+.cta h2{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;margin:0 0 14px}
+.cta p{margin:0 0 26px;color:rgba(255,255,255,.85)}
+.dados{display:flex;gap:10px 28px;justify-content:center;flex-wrap:wrap;margin-top:26px;font-size:.92rem;color:rgba(255,255,255,.85)}
+
+.rodape .w{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:28px;font-size:.88rem;color:var(--fraco);border-top:1px solid rgba(255,255,255,.12)}
+.rodape a{text-decoration:underline}
+
+.zap{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;transition-property:transform,opacity;transition-duration:.2s}
+.zap::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#25D366;z-index:-1}
+.zap svg{position:relative;z-index:1}
+
+@media (max-width:900px){
+  .topo{top:calc(10px + env(safe-area-inset-top,0px))}
+  .topo nav{display:none}
+  .topo .barra{padding-left:18px}
+  .hero{padding-bottom:28px;background-position:center 80%}
+  .hero .w{grid-template-columns:1fr;gap:24px}
+  .flutua{justify-items:stretch;grid-template-columns:1fr 1fr;gap:10px}
+  .mini{min-width:0;padding:14px;gap:10px;border-radius:20px}
+  .mini .ic{display:none}
+  .numeros{grid-template-columns:1fr 1fr}
+  .sobre,.formatos{grid-template-columns:1fr}
+  .sobre .foto{min-height:380px}
+  .areas,.passos{grid-template-columns:1fr}
+  .area{min-height:0}.area h3{margin-top:8px}
+  .cab .intro{display:none}
+  .cab{margin-bottom:28px}
+  .sec{padding-top:80px}.fim{padding-block:80px}
+  .cta{min-height:0;padding:24px 14px;border-radius:30px}
+  .zap:not(.on){opacity:0;pointer-events:none;transform:translateY(12px)}
+}
+@media (max-width:350px){.flutua{grid-template-columns:1fr}.hero h1{font-size:2.9rem}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.vidro{background:rgba(40,56,46,.88)}}
+</style>
+</head>
+<body>
+<header class="topo"><div class="w"><div class="barra vidro">
+  <a class="marca" href="#inicio">Marina Rocha <span>Nutrição</span></a>
+  <nav aria-label="Seções"><a href="#sobre">Sobre</a><a href="#cuidado">Cuidado</a><a href="#consulta">Consulta</a><a href="#duvidas">Dúvidas</a></nav>
+  <a class="ag" href="#contato">Agendar</a>
+</div></div></header>
+
+<main id="inicio">
+<section class="hero"><div class="w">
+  <div>
+    <h1>Energia pro dia inteiro.</h1>
+    <p class="sub">Nutrição para quem treina, trabalha muito e quer ter energia pro dia inteiro, sem abrir mão do que gosta.</p>
+    <a class="btn vidro" href="#contato">Agendar minha consulta<span class="seta"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+  </div>
+  <div class="flutua">
+    <div class="mini vidro"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2 8 12.7 4 8.8 9.5 8z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></span><div><b>CRN-8 00000</b><span>8 anos de consultório</span></div></div>
+    <div class="mini vidro"><i class="pt"></i><div><b>Agenda aberta</b><span>Batel e online</span></div></div>
+  </div>
+</div></section>
+
+<div class="palco">
+<i class="mancha m1"></i><i class="mancha m2"></i><i class="mancha m3"></i><i class="mancha m4"></i>
+
+<section class="sec" style="padding-top:64px"><div class="w numeros">
+  <div class="vidro"><b>1h</b><span>de primeira consulta, sem pressa</span></div>
+  <div class="vidro"><b>3 dias</b><span>para o plano chegar no seu e-mail</span></div>
+  <div class="vidro"><b>30 dias</b><span>até o retorno de ajuste</span></div>
+  <div class="vidro"><b>2 jeitos</b><span>de consultar: Batel ou vídeo</span></div>
+</div></section>
+
+<section class="sec" id="sobre"><div class="w sobre">
+  <div class="foto" role="img" aria-label="Mesa com tábua de legumes e verduras frescas"><div class="mini vidro"><div><b>Marina Rocha</b><span>Aqui entra a foto da profissional</span></div></div></div>
+  <div class="texto vidro">
+    <h2>Oi, sou a Marina.</h2>
+    <p class="frase">Eu não quero que você siga uma dieta. Quero que você saiba montar o seu prato sozinha.</p>
+    <p>Atendo há 8 anos, principalmente mulheres que treinam e têm a agenda lotada. A consulta começa pela sua rotina real, e não por uma lista de proibições.</p>
+    <p>O plano muda junto com você: semana de viagem, semana de prova, semana de festa.</p>
+    <ul class="tags"><li>Nutrição · 2016</li><li>Pós em Nutrição Esportiva · 2019</li><li>Saúde da Mulher · 2022</li></ul>
+  </div>
+</div></section>
+
+<section class="sec" id="cuidado"><div class="w">
+  <div class="cab"><h2>No que eu posso<br>te ajudar</h2><p class="intro">Atendimento para mulheres a partir de 18 anos.</p></div>
+  <div class="areas">
+    <div class="area vidro"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h3l2-5 4 10 2-5h5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Treino e performance</h3><p>Pré e pós-treino, hipertrofia e definição sem perder energia.</p></div>
+    <div class="area vidro"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="#fff" stroke-width="2"/><path d="M12 8v4l3 2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span><h3>Rotina corrida</h3><p>Marmitas, lanches de bolsa e o que pedir quando come fora.</p></div>
+    <div class="area vidro"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></span><h3>Saúde da mulher</h3><p>Ciclo menstrual, intestino e disposição ao longo do mês.</p></div>
+  </div>
+</div></section>
+
+<section class="sec" id="consulta"><div class="w">
+  <div class="cab"><h2>Como funciona</h2><p class="intro">Do primeiro oi ao retorno.</p></div>
+  <ol class="passos">
+    <li class="vidro"><small>Hoje</small><b>Agendamento</b><p>Você escolhe dia e formato pelo WhatsApp.</p></li>
+    <li class="vidro"><small>Dia da consulta</small><b>Conversa</b><p>1 hora sobre rotina, treinos, exames e preferências.</p></li>
+    <li class="vidro"><small>Até 3 dias úteis</small><b>Seu plano</b><p>Cardápio, substituições e lista de compras no e-mail.</p></li>
+    <li class="vidro"><small>30 dias</small><b>Retorno</b><p>Ajustes a partir do que funcionou na sua semana.</p></li>
+  </ol>
+</div></section>
+
+<section class="sec"><div class="w">
+  <div class="cab"><h2>Batel ou vídeo</h2></div>
+  <div class="formatos">
+    <div class="vidro"><h3>Consultório</h3><p>Al. Dom Pedro II, 0000, Batel, Curitiba.</p><ul><li>Bioimpedância e medidas</li><li>Seg. a sex., 7h às 20h</li><li>Estacionamento no prédio</li></ul></div>
+    <div class="vidro"><h3>Online</h3><p>A mesma consulta, de qualquer lugar.</p><ul><li>Vídeo pelo celular ou computador</li><li>Plano no app e no e-mail</li><li>Dúvidas no WhatsApp entre consultas</li></ul></div>
+  </div>
+</div></section>
+
+<section class="sec" id="duvidas"><div class="w">
+  <div class="cab"><h2>Dúvidas</h2></div>
+  <div class="duv">
+    <details class="vidro"><summary>Preciso parar de comer fora?</summary><p>Não. A gente monta um guia do que pedir nos lugares que você já frequenta.</p></details>
+    <details class="vidro"><summary>Atende convênio?</summary><p>O atendimento é particular, com recibo para pedir reembolso ao seu plano de saúde.</p></details>
+    <details class="vidro"><summary>Vou precisar de suplemento?</summary><p>Só se fizer sentido para o seu caso. Muita coisa se resolve no prato.</p></details>
+    <details class="vidro"><summary>Posso remarcar?</summary><p>Pode, avisando com 24 horas de antecedência.</p></details>
+  </div>
+</div></section>
+</div>
+
+<section class="fim" id="contato"><div class="w"><div class="cta" role="img" aria-label="Tigela colorida com legumes e grãos">
+  <div class="vidro">
+    <h2>Vamos começar?</h2>
+    <p>Me manda uma mensagem com o melhor horário. Respondo no mesmo dia útil.</p>
+    <a class="btn cheio" href="https://wa.me/5541900000000" target="_blank" rel="noopener">Chamar no WhatsApp<span class="seta"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    <div class="dados"><span>(41) 90000-0000</span><span>@marinarocha.nutri</span><span>Batel, Curitiba</span></div>
+  </div>
+</div></div></section>
+</main>
+<footer class="rodape"><div class="w">
+  <span>Projeto conceito. Nome, registro, endereço e contatos são fictícios. Fotos: Unsplash.</span>
+  <span>Site feito por <a href="../">Pedro Castro</a></span>
+</div></footer>
+<a class="zap vidro" href="https://wa.me/5541900000000" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp" style="border-radius:50%"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.2Z"/></svg></a>
+<script>(function(){var z=document.querySelector(".zap");function r(){z.classList.toggle("on",window.scrollY>400)}addEventListener("scroll",r,{passive:true});r()})();</script>
+</body>
+</html>
