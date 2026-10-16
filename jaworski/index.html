@@ -19,6 +19,8 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+html,body{overflow-x:hidden}@supports (overflow:clip){html,body{overflow-x:clip}}
+#equipe,main,footer{overflow-x:hidden}@supports (overflow:clip){#equipe,main,footer{overflow-x:clip}}
 html{scroll-behavior:smooth;scroll-padding-top:90px;-webkit-font-smoothing:antialiased}
 body{margin:0;background:var(--branco);color:var(--tinta);font-family:var(--sans);font-size:1.0625rem;line-height:1.6}
 p{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
