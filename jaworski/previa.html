@@ -301,8 +301,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
   <div>
     <h2>Quem cuida de você</h2>
     <div class="pessoa" aria-live="polite">
-      <span class="cargo" id="p-cargo">Fundador · Implantes e prótese</span>
-      <p class="frase" id="p-frase">"Cuidar com carinho e amor do sorriso, a curva mais bonita do ser humano."</p>
+            <p class="frase" id="p-frase">"Cuidar com carinho e amor do sorriso, a curva mais bonita do ser humano."</p>
       <p id="p-texto">O Dr. Mário é formado em Odontologia pela PUCPR e atende em Curitiba e em Pinhais com uma equipe que inclui dentistas de outras áreas, como odontopediatria. Na clínica, o paciente é atendido com horário marcado, sem pressa e com tudo explicado antes de cada procedimento.</p>
       <ul class="fatos" id="p-fatos"><li><b>Duas unidades</b>Alto da XV e Pinhais</li><li><b>Atendimento particular</b>com recibo</li><li><b>Equipe</b>adultos e crianças</li><li><b>PUCPR</b>formação</li></ul>
     </div>
@@ -368,7 +367,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
     pt.innerHTML=cs.map(function(_,i){return '<i data-i="'+i+'"><b></b></i>'}).join("");
     var ds=[].slice.call(pt.children);
     function pinta(){cs.forEach(function(c,i){c.setAttribute("data-p",(i-at+n)%n)});ds.forEach(function(d,i){d.className=i<at?"feito":i==at?"":"";});void pt.offsetWidth;ds[at].className="ativo";
-      if(!cel.matches){ps.classList.add("troca");setTimeout(function(){var p=P[at];document.getElementById("p-cargo").textContent=p.c;document.getElementById("p-frase").textContent=p.f;document.getElementById("p-texto").textContent=p.t;document.getElementById("p-fatos").innerHTML=p.l;ps.classList.remove("troca")},200)}}
+      if(false){ps.classList.add("troca");setTimeout(function(){var p=P[at];document.getElementById("p-frase").textContent=p.f;document.getElementById("p-texto").textContent=p.t;document.getElementById("p-fatos").innerHTML=p.l;ps.classList.remove("troca")},200)}}
     function vai(d){var velho=cs[at];if(d>0){velho.classList.add("sai");setTimeout(function(){velho.classList.remove("sai")},560)}at=(at+d+n)%n;pinta();liga()}
     function liga(){clearTimeout(tm);if(cel.matches)return;tm=setTimeout(function(){if(!tl.matches(":hover")&&!document.hidden)vai(1);else liga()},7000)}
     document.querySelector(".prox").onclick=function(){vai(1)};document.querySelector(".ant").onclick=function(){vai(-1)};
