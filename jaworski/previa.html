@@ -140,7 +140,6 @@ h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,5.2vw,4.2rem)
   .carta .fr{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:normal;font-family:var(--serif);font-size:.86rem;line-height:1.3;color:var(--floresta-2);margin-top:5px}
   .carta .ex{top:10px;left:10px;font-size:.62rem;padding:3px 7px}
   .controle{margin-top:22px}
-  .pontos i.ativo b{animation:none;transform:scaleX(1)}
 }
 .pessoa{transition:opacity .2s ease-out,transform .2s ease-out}.pessoa.troca{opacity:0;transform:translateY(4px)}
 .cargo{display:inline-block;font-size:.85rem;font-weight:700;color:var(--caramelo);letter-spacing:.03em;text-transform:uppercase;margin:0 0 10px}
@@ -371,7 +370,7 @@ details p{margin:0 0 22px;color:var(--cinza);max-width:60ch}
     function pinta(){cs.forEach(function(c,i){c.setAttribute("data-p",(i-at+n)%n)});ds.forEach(function(d,i){d.className=i<at?"feito":i==at?"":"";});void pt.offsetWidth;ds[at].className="ativo";
       if(false){ps.classList.add("troca");setTimeout(function(){var p=P[at];document.getElementById("p-frase").textContent=p.f;document.getElementById("p-texto").textContent=p.t;document.getElementById("p-fatos").innerHTML=p.l;ps.classList.remove("troca")},200)}}
     function vai(d){var velho=cs[at];if(d>0){velho.classList.add("sai");setTimeout(function(){velho.classList.remove("sai")},560)}at=(at+d+n)%n;pinta();liga()}
-    function liga(){clearTimeout(tm);if(cel.matches)return;tm=setTimeout(function(){if(!tl.matches(":hover")&&!document.hidden)vai(1);else liga()},7000)}
+    function liga(){clearTimeout(tm);tm=setTimeout(function(){if(!tl.matches(":hover")&&!document.hidden)vai(1);else liga()},7000)}
     document.querySelector(".prox").onclick=function(){vai(1)};document.querySelector(".ant").onclick=function(){vai(-1)};
     pt.onclick=function(e){var i=e.target.closest("i");if(i){at=+i.dataset.i;pinta();liga()}};
     var x0=null,dx=0;cs.forEach(function(c){
