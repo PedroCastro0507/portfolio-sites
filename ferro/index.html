@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E0C0B">
+<title>Ferro · Smash Burger · Curitiba</title>
+<meta name="description" content="Smash burger na chapa de ferro em Curitiba. Monte seu pedido no site e mande pronto pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fundo:#0E0C0B; --fundo-2:#171412; --cartao:#1C1916; --linha:#2E2824; --texto:#F4EEE6; --suave:#BDB3A8; --fraco:#8A8077;
+  --fogo:#FF5A1F; --fogo-esc:#E1480F; --verde:#25D366; --creme:#F4EEE6; --tinta:#120A06;
+  --raio:24px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+html,body{background:var(--fundo);color:var(--texto);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--fogo);outline-offset:3px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums}
+.envolve{width:min(1240px,100% - 10vw);margin-inline:auto}
+.display{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.92}
+.ponto-vivo{width:8px;height:8px;border-radius:50%;background:#34d27b;flex:none;animation:pulsa 1.8s infinite}
+.ponto-vivo.off{background:#E25B4B;animation:none}
+@keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(52,210,123,.55)}70%{box-shadow:0 0 0 9px rgba(52,210,123,0)}100%{box-shadow:0 0 0 0 rgba(52,210,123,0)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 24px;border-radius:999px;font-weight:800;font-size:15px;white-space:nowrap;transition:transform .16s ease-out,background .2s,border-color .2s}
+.btn:active{transform:scale(.97)}
+.btn-fogo{background:var(--fogo);color:var(--tinta)}
+.btn-fogo:hover{background:#FF6B33}
+.btn-linha{border:1.5px solid var(--linha);color:var(--texto)}
+.btn-linha:hover{border-color:var(--suave)}
+.btn svg{width:18px;height:18px;flex:none}
+.titulo-sec{margin-bottom:40px}
+.titulo-sec .chapeu{font-weight:800;font-size:12px;letter-spacing:.18em;color:var(--fogo);text-transform:uppercase}
+.titulo-sec h2{font-size:clamp(46px,6vw,84px);margin-top:12px}
+.titulo-sec p{color:var(--suave);font-size:17px;line-height:1.55;max-width:520px;margin-top:14px}
+.revela{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.revela.visto{opacity:1;transform:none}
+
+/* ---------- cabeçalho ---------- */
+.cab{position:fixed;inset:0 0 auto 0;z-index:40;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.cab.rolou{background:rgba(14,12,11,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--linha)}
+.cab .envolve{display:flex;align-items:center;justify-content:space-between;height:78px}
+.marca{font:400 30px/1 Anton,sans-serif;letter-spacing:.06em}
+.marca span{color:var(--fogo)}
+.cab nav{display:flex;gap:30px;font-weight:600;font-size:14px;color:var(--suave)}
+.cab nav a:hover{color:var(--texto)}
+.cab .btn{height:44px;padding:0 18px;font-size:14px;transition:opacity .25s,transform .25s}
+.cab .qtd{background:var(--tinta);color:var(--fogo);border-radius:99px;font-size:12px;padding:1px 7px;margin-left:-2px}
+
+/* ---------- topo ---------- */
+.topo{position:relative;min-height:100svh;padding-top:96px;display:flex;flex-direction:column}
+.topo .palco{flex:1;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:3vw;padding-bottom:110px}
+.topo h1{font-size:clamp(66px,8.6vw,138px)}
+.topo h1 em{font-style:normal;color:var(--fogo)}
+.topo .linha{margin-top:26px;font-size:18px;line-height:1.55;color:var(--suave);max-width:450px}
+.topo .botoes{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.provas{display:flex;gap:30px;margin-top:42px;font-size:13px;color:var(--fraco);font-weight:600}
+.provas b{display:block;font:400 28px Anton,sans-serif;color:var(--texto);letter-spacing:.02em;margin-bottom:2px}
+.foto-topo{position:relative;height:min(76vh,720px);min-height:460px;border-radius:30px;overflow:hidden;background:var(--fundo-2)}
+.foto-topo img{width:100%;height:100%;object-fit:cover;transform:scale(1.06);animation:respira 14s ease-in-out infinite alternate}
+@keyframes respira{to{transform:scale(1.0)}}
+.foto-topo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,12,11,0) 55%,rgba(14,12,11,.7))}
+.pilula-status{display:inline-flex;align-items:center;gap:9px;background:rgba(14,12,11,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:9px 14px;border-radius:999px;font-weight:700;font-size:13px}
+.foto-topo .pilula-status{position:absolute;top:20px;left:20px;z-index:2}
+.mini-sacola{position:absolute;right:20px;bottom:20px;z-index:2;width:280px;background:var(--creme);color:var(--tinta);border-radius:20px;padding:16px;box-shadow:0 24px 60px -12px rgba(0,0,0,.65);transition:transform .3s}
+.mini-sacola small{font-weight:800;font-size:11px;letter-spacing:.1em;color:#8A7F72;text-transform:uppercase}
+.mini-sacola .it{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:9px}
+.mini-sacola .tot{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #D6CBBE;margin-top:12px;padding-top:12px;font-weight:800}
+.mini-sacola .tot span:last-child{background:var(--verde);color:#06210F;padding:7px 12px;border-radius:999px;font-size:12px}
+.fita{position:absolute;left:0;right:0;bottom:0;background:var(--fogo);color:var(--tinta);font:400 22px Anton,sans-serif;letter-spacing:.06em;white-space:nowrap;padding:13px 0;overflow:hidden}
+.fita div{display:inline-block;animation:corre 30s linear infinite}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* ---------- cardápio ---------- */
+.cardapio{padding:130px 0 120px}
+.cardapio .grade-c>*{min-width:0}
+.cardapio .grade-c{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:start}
+.abas{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.abas button{flex:none;height:44px;padding:0 20px;border-radius:999px;font-weight:700;font-size:14px;color:var(--suave);background:var(--cartao);border:1px solid var(--linha);transition:background .2s,color .2s,border-color .2s}
+.abas button[aria-selected="true"]{background:var(--texto);color:var(--tinta);border-color:var(--texto)}
+.pratos{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.prato{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;display:flex;flex-direction:column;animation:entra .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes entra{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.prato .ft{aspect-ratio:4/3;overflow:hidden;background:var(--fundo-2);position:relative}
+.prato .ft img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.prato:hover .ft img{transform:scale(1.05)}
+.prato .selo{position:absolute;top:12px;left:12px;background:var(--fogo);color:var(--tinta);font-weight:800;font-size:11px;letter-spacing:.06em;padding:5px 10px;border-radius:99px;text-transform:uppercase}
+.prato .tx{padding:18px 18px 18px;display:flex;flex-direction:column;flex:1}
+.prato h3{font:400 26px/1 Anton,sans-serif;text-transform:uppercase;letter-spacing:.01em}
+.prato p{color:var(--suave);font-size:14px;line-height:1.5;margin-top:8px}
+.prato .rod{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:18px}
+.prato .preco{font-weight:800;font-size:18px}
+.passo{display:flex;align-items:center;gap:4px;background:var(--fundo);border:1px solid var(--linha);border-radius:999px;padding:4px}
+.passo button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;font-weight:700;transition:background .15s}
+.passo button:hover{background:var(--linha)}
+.passo .q{min-width:18px;text-align:center;font-weight:800;font-size:15px}
+.add{height:42px;padding:0 16px;border-radius:999px;background:var(--fogo);color:var(--tinta);font-weight:800;font-size:14px;display:inline-flex;align-items:center;gap:6px;transition:transform .15s}
+.add:active{transform:scale(.95)}
+
+.sacola{position:sticky;top:100px;background:var(--creme);color:var(--tinta);border-radius:28px;padding:22px;box-shadow:0 30px 70px -25px rgba(0,0,0,.7)}
+.sacola h3{font:400 30px Anton,sans-serif;text-transform:uppercase;letter-spacing:.02em;display:flex;align-items:center;justify-content:space-between}
+.sacola h3 span{font:800 13px Manrope,sans-serif;background:var(--tinta);color:var(--creme);border-radius:99px;padding:3px 10px;letter-spacing:0}
+.sacola .vazia{color:#8A7F72;font-size:14px;line-height:1.5;padding:22px 0 8px}
+.sacola ul{list-style:none;padding:0;margin-top:14px;max-height:280px;overflow:auto}
+.sacola li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid #E3D8CB;font-size:14px;font-weight:700}
+.sacola li:first-child{border-top:0}
+.sacola li .x{color:#8A7F72;font-weight:800}
+.sacola li button{width:26px;height:26px;border-radius:50%;background:#E8DED2;font-weight:800;line-height:1}
+.sacola .modo{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#E8DED2;border-radius:14px;padding:4px;margin-top:16px}
+.sacola .modo button{height:38px;border-radius:10px;font-weight:700;font-size:13px;color:#5E554B}
+.sacola .modo button[aria-pressed="true"]{background:var(--creme);color:var(--tinta);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.sacola .soma{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;padding-top:14px;border-top:1.5px dashed #D6CBBE;font-weight:800}
+.sacola .soma b{font-size:26px}
+.sacola .obs{font-size:12px;color:#8A7F72;margin-top:6px}
+.btn-zap{width:100%;margin-top:16px;background:var(--verde);color:#06210F}
+.btn-zap:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- como fazemos ---------- */
+.como{padding:120px 0;background:var(--fundo-2);border-block:1px solid var(--linha)}
+.como .grade-como{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center}
+.como .foto{border-radius:30px;overflow:hidden;aspect-ratio:4/5;position:relative}
+.como .foto img{width:100%;height:100%;object-fit:cover}
+.como .foto .temp{position:absolute;left:20px;bottom:20px;background:rgba(14,12,11,.72);backdrop-filter:blur(10px);border-radius:18px;padding:14px 18px}
+.como .foto .temp b{font:400 40px/1 Anton,sans-serif;color:var(--fogo)}
+.como .foto .temp small{display:block;color:var(--suave);font-weight:600;font-size:13px;margin-top:4px}
+.etapas{list-style:none;padding:0;position:relative}
+.etapas li{display:grid;grid-template-columns:76px 1fr;gap:20px;padding:26px 0;border-top:1px solid var(--linha)}
+.etapas li:first-child{border-top:0;padding-top:0}
+.etapas .n{font:400 64px/0.9 Anton,sans-serif;color:transparent;-webkit-text-stroke:1.5px var(--fogo)}
+.etapas h3{font:400 30px/1 Anton,sans-serif;text-transform:uppercase}
+.etapas p{color:var(--suave);font-size:15px;line-height:1.6;margin-top:8px}
+
+/* ---------- casa ---------- */
+.casa{padding:120px 0}
+.mosaico{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:300px 300px;gap:16px}
+.mosaico figure{margin:0;border-radius:26px;overflow:hidden;position:relative;background:var(--fundo-2)}
+.mosaico figure:first-child{grid-row:span 2}
+.mosaico img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.mosaico figure:hover img{transform:scale(1.04)}
+.mosaico figcaption{position:absolute;left:18px;bottom:16px;font-weight:700;font-size:14px;background:rgba(14,12,11,.66);backdrop-filter:blur(8px);padding:8px 13px;border-radius:99px}
+
+/* ---------- onde ---------- */
+.onde{padding:40px 0 140px}
+.onde .grade-onde{display:grid;grid-template-columns:1fr 1.15fr;gap:24px;align-items:stretch}
+.onde .info{background:var(--cartao);border:1px solid var(--linha);border-radius:30px;padding:30px;display:flex;flex-direction:column}
+.onde .end{font-size:18px;font-weight:700;line-height:1.45;margin-top:18px}
+.onde .end small{display:block;color:var(--suave);font-weight:500;font-size:14px;margin-top:4px}
+.horarios{list-style:none;padding:0;margin-top:22px}
+.horarios li{display:flex;justify-content:space-between;padding:10px 12px;border-radius:12px;font-size:15px;color:var(--suave)}
+.horarios li.hoje{background:var(--fundo);color:var(--texto);font-weight:800}
+.horarios li.hoje span:first-child::after{content:" · hoje";color:var(--fogo);font-weight:700}
+.onde .acoes{display:flex;gap:10px;margin-top:auto;padding-top:24px;flex-wrap:wrap}
+.mapa{position:relative;border-radius:30px;overflow:hidden;min-height:440px;border:1px solid var(--linha);background:var(--fundo-2)}
+.mapa iframe{position:absolute;inset:0;width:1px;min-width:100%;height:100%;border:0;filter:grayscale(1) invert(.92) contrast(.9)}
+.mapa .abrir-mapa{display:none}
+
+/* ---------- fechamento ---------- */
+.fome{background:var(--fogo);color:var(--tinta);position:relative;overflow:hidden;padding:110px 0 120px}
+.fome .gigante{font-size:clamp(120px,24vw,360px);line-height:.8;letter-spacing:-.01em}
+.fome .linha-f{display:flex;justify-content:flex-start;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-top:28px}
+.fome p{font-size:20px;font-weight:700;max-width:440px;line-height:1.45}
+.fome .btn{background:var(--tinta);color:var(--creme);height:60px;padding:0 30px;font-size:16px}
+.fome .burger-solto{position:absolute;right:-4vw;top:40px;width:min(44vw,560px);aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 40px 80px -30px rgba(60,10,0,.6);transform:rotate(-8deg)}
+.fome .burger-solto img{width:100%;height:100%;object-fit:cover;transform:scale(1.15)}
+.rodape{background:var(--tinta);color:var(--fraco);font-size:13px;padding:28px 0 34px}
+.rodape .envolve{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.rodape a{color:var(--suave);font-weight:700}
+.rodape a:hover{color:var(--texto)}
+
+/* ---------- ilha (celular) e zap (computador) ---------- */
+.ilha{display:none}
+.zap-flutua{position:fixed;right:24px;bottom:24px;z-index:35;width:58px;height:58px;border-radius:50%;background:var(--verde);display:grid;place-items:center;box-shadow:0 14px 34px -10px rgba(0,0,0,.6);transition:transform .2s}
+.zap-flutua:hover{transform:scale(1.06)}
+.zap-flutua svg{width:28px;height:28px;color:#06210F}
+
+/* ---------- janela do pedido ---------- */
+.janela-fundo{position:fixed;inset:0;z-index:60;background:rgba(8,6,5,.6);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s}
+.janela-fundo.aberta{opacity:1;pointer-events:auto}
+.janela{width:min(440px,100%);background:#0B141A;border-radius:26px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.8);transform:translateY(14px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.janela-fundo.aberta .janela{transform:none}
+.janela .zap-topo{background:#1F2C33;display:flex;align-items:center;gap:12px;padding:14px 16px}
+.janela .zap-topo i{width:38px;height:38px;border-radius:50%;background:var(--fogo);display:grid;place-items:center;font:400 15px Anton,sans-serif;color:var(--tinta);font-style:normal}
+.janela .zap-topo b{display:block;font-size:15px}
+.janela .zap-topo small{color:#8696A0;font-size:12px}
+.janela .conversa{padding:22px 16px;background:#0B141A;min-height:200px}
+.janela .balao{margin-left:auto;max-width:88%;background:#005C4B;color:#E9EDEF;border-radius:14px 4px 14px 14px;padding:10px 12px 8px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.janela .balao small{display:block;text-align:right;color:#8FB7AE;font-size:11px;margin-top:4px}
+.janela .nota{color:#8696A0;font-size:12.5px;line-height:1.5;padding:0 16px 14px;text-align:center}
+.janela .acoes-j{display:flex;gap:10px;padding:0 16px 18px}
+.janela .acoes-j .btn{flex:1;height:46px;font-size:14px}
+
+@media (max-width:1180px) and (min-width:821px){.pratos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:980px){
+  .cardapio .grade-c{grid-template-columns:minmax(0,1fr)}
+  .sacola{display:none}
+  .como .grade-como{grid-template-columns:1fr}
+  .como .foto{aspect-ratio:16/10}
+  .onde .grade-onde{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .envolve{width:calc(100% - 40px)}
+  .cab nav{display:none}
+  .cab .envolve{height:68px}
+  .cab .btn .txt{display:none}
+  .cab .btn{width:44px;padding:0}
+  body.ilha-on .cab .btn{opacity:0;transform:scale(.8);pointer-events:none}
+  .topo{padding-top:80px}
+  .topo .palco{grid-template-columns:1fr;gap:30px;padding-bottom:100px}
+  .topo h1{font-size:clamp(58px,17vw,84px)}
+  .topo .linha{font-size:16px}
+  .topo .botoes .btn{width:100%}
+  .provas{gap:20px}
+  .provas b{font-size:24px}
+  .foto-topo{height:440px;min-height:0;border-radius:24px}
+  .mini-sacola{width:236px;right:14px;bottom:14px;padding:14px}
+  .fita{font-size:18px;padding:11px 0}
+  .titulo-sec p{display:none}
+  .titulo-sec{margin-bottom:28px}
+  .cardapio{padding:90px 0 90px}
+  .pratos{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .prato{min-width:0}
+  .passo button{width:30px;height:30px}
+  .prato .tx{padding:14px}
+  .prato h3{font-size:20px}
+  .prato p{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .prato .rod{flex-direction:column;align-items:stretch;gap:10px;padding-top:12px}
+  .prato .preco{font-size:16px}
+  .add{justify-content:center;height:40px}
+  .passo{justify-content:space-between}
+  .como{padding:90px 0}
+  .etapas li{grid-template-columns:54px 1fr;gap:14px;padding:20px 0}
+  .etapas .n{font-size:46px}
+  .etapas h3{font-size:24px}
+  .casa{padding:90px 0}
+  .mosaico{grid-template-columns:1fr 1fr;grid-template-rows:240px 150px}
+  .mosaico figure:first-child{grid-column:span 2;grid-row:auto}
+  .mosaico figcaption{font-size:12px;left:10px;bottom:10px}
+  .onde{padding:20px 0 100px}
+  .onde .info{padding:22px;border-radius:24px}
+  .onde .acoes .btn{flex:1}
+  .mapa{min-height:300px;border-radius:24px}
+  .mapa iframe{pointer-events:none}
+  .mapa .abrir-mapa{display:block;position:absolute;inset:0;z-index:2}
+  .fome{padding:80px 0 100px}
+  .fome .burger-solto{width:62vw;right:-18vw;top:30px}
+  .fome .btn{width:100%}
+  .rodape{padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+  .zap-flutua{display:none}
+  .ilha{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:45;align-items:center;gap:8px;padding:8px;border-radius:999px;background:rgba(244,238,230,.82);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.5);box-shadow:0 18px 40px -12px rgba(0,0,0,.7);color:var(--tinta);transform:translateY(140%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  body.ilha-on .ilha{transform:none}
+  .ilha .resumo{flex:1;display:flex;flex-direction:column;padding-left:12px;min-width:0}
+  .ilha .resumo b{font-size:15px}
+  .ilha .resumo small{font-size:12px;color:#6B6157;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ilha .btn{height:48px;padding:0 18px;font-size:14px}
+  .ilha .ligar{width:48px;height:48px;border-radius:50%;background:var(--tinta);color:var(--creme);display:grid;place-items:center;flex:none}
+  .ilha .ligar svg{width:20px;height:20px}
+  .folha{position:fixed;left:0;right:0;bottom:0;z-index:55;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+  .folha.aberta{transform:none}
+  .folha .sacola{display:block;position:static;border-radius:28px 28px 0 0;padding-bottom:calc(22px + env(safe-area-inset-bottom));max-height:86svh;overflow:auto}
+  .folha .puxador{width:44px;height:5px;border-radius:99px;background:#D6CBBE;margin:-8px auto 14px}
+}
+@media (min-width:821px){.folha{display:none}}
+</style>
+</head>
+<body>
+
+<header class="cab" id="cab">
+  <div class="envolve">
+    <a href="#topo" class="marca" aria-label="Ferro, início">FERRO<span>.</span></a>
+    <nav aria-label="Menu"><a href="#cardapio">Cardápio</a><a href="#como">Como fazemos</a><a href="#onde">Onde estamos</a></nav>
+    <a href="#cardapio" class="btn btn-fogo" id="cab-pedir" aria-label="Pedir no WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-zap"/></svg><span class="txt">Pedir no WhatsApp</span><span class="qtd num" id="cab-qtd" hidden>0</span></a>
+  </div>
+</header>
+
+<main>
+<!-- ================= TOPO ================= -->
+<section class="topo" id="topo">
+  <div class="envolve palco">
+    <div>
+      <h1 class="display">Smash na <em>chapa</em> de ferro.</h1>
+      <p class="linha">Blend prensado na hora, borda crocante, queijo derretendo. Você monta o pedido aqui e ele já chega pronto no nosso WhatsApp.</p>
+      <div class="botoes"><a href="#cardapio" class="btn btn-fogo">Montar meu pedido</a><a href="#onde" class="btn btn-linha">Onde estamos</a></div>
+      <div class="provas"><span><b class="num">25 min</b>tempo médio</span><span><b class="num">90 g</b>cada smash</span><span><b class="num">Ter–Dom</b>das 18h às 23h</span></div>
+    </div>
+    <div class="foto-topo">
+      <div class="pilula-status" data-status><span class="ponto-vivo"></span><span>Conferindo horário…</span></div>
+      <img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?auto=format&fit=crop&w=1400&q=80" alt="Smash burger duplo com cheddar e picles">
+      <div class="mini-sacola" aria-hidden="true"><small>Seu pedido</small>
+        <div class="it"><span>2× Smash duplo</span><span class="num">R$ 72</span></div>
+        <div class="it"><span>1× Batata rústica</span><span class="num">R$ 19</span></div>
+        <div class="tot"><span class="num">R$ 91</span><span>Enviar no WhatsApp</span></div></div>
+    </div>
+  </div>
+  <div class="fita" aria-hidden="true"><div>SMASH DUPLO ✺ BATATA RÚSTICA ✺ MILK-SHAKE DE DOCE DE LEITE ✺ CHEDDAR DE VERDADE ✺ PÃO BRIOCHE DA CASA ✺ CEBOLA NA CHAPA ✺ SMASH DUPLO ✺ BATATA RÚSTICA ✺ MILK-SHAKE DE DOCE DE LEITE ✺ CHEDDAR DE VERDADE ✺ PÃO BRIOCHE DA CASA ✺ CEBOLA NA CHAPA ✺&nbsp;</div></div>
+</section>
+
+<!-- ================= CARDÁPIO ================= -->
+<section class="cardapio" id="cardapio">
+  <div class="envolve">
+    <div class="titulo-sec revela"><div class="chapeu">Cardápio</div><h2 class="display">Escolhe aí.</h2>
+      <p>Toque no + para colocar na sacola. No fim, o pedido vai pronto para o nosso WhatsApp: é só apertar enviar.</p></div>
+    <div class="grade-c">
+      <div>
+        <div class="abas" role="tablist" id="abas"></div>
+        <div class="pratos" id="pratos"></div>
+      </div>
+      <aside class="sacola" id="sacola-lateral" aria-label="Sua sacola"></aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMO FAZEMOS ================= -->
+<section class="como" id="como">
+  <div class="envolve grade-como">
+    <div class="foto revela">
+      <img src="https://images.unsplash.com/photo-1678110707289-ab14382a1625?auto=format&fit=crop&w=1100&q=80" alt="Cheeseburger saindo da chapa" loading="lazy">
+      <div class="temp"><b class="num">250°C</b><small>a chapa de ferro antes do primeiro smash</small></div>
+    </div>
+    <div>
+      <div class="titulo-sec revela"><div class="chapeu">Como fazemos</div><h2 class="display">Dois minutos que fazem tudo.</h2></div>
+      <ol class="etapas revela">
+        <li><span class="n num">01</span><div><h3>Bola de 90 gramas</h3><p>Blend de acém e peito moído no dia, sem tempero misturado. Só sal e pimenta na hora de ir pra chapa.</p></div></li>
+        <li><span class="n num">02</span><div><h3>Prensa sem dó</h3><p>A bola é amassada fina na chapa quente. É isso que cria a borda escura e crocante que dá nome ao smash.</p></div></li>
+        <li><span class="n num">03</span><div><h3>Cheddar e cebola na chapa</h3><p>Vira uma vez, recebe o queijo e a cebola, e vai direto pro pão brioche tostado na manteiga.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= A CASA ================= -->
+<section class="casa" id="casa">
+  <div class="envolve">
+    <div class="titulo-sec revela"><div class="chapeu">A casa</div><h2 class="display">Balcão, neon e chapa à vista.</h2>
+      <p>Vinte lugares, música alta o suficiente e a cozinha aberta para você ver o seu sair.</p></div>
+    <div class="mosaico revela">
+      <figure><img src="https://images.unsplash.com/photo-1768933227584-f9be340e7f1a?auto=format&fit=crop&w=1300&q=80" alt="Mão colocando ketchup num cheeseburger duplo com batatas" loading="lazy"><figcaption>Do jeito que sai da chapa</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1565607569011-577f0785694f?auto=format&fit=crop&w=900&q=80" alt="Letreiro de neon de hambúrguer" loading="lazy"><figcaption>Aberto até as 23h</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1696487773677-c0c8061fe3d2?auto=format&fit=crop&w=900&q=80" alt="Milk-shake de chocolate com granulado" loading="lazy"><figcaption>Shake batido na hora</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ONDE ================= -->
+<section class="onde" id="onde">
+  <div class="envolve">
+    <div class="titulo-sec revela"><div class="chapeu">Onde estamos</div><h2 class="display">Vem buscar ou pede em casa.</h2></div>
+    <div class="grade-onde">
+      <div class="info revela">
+        <div class="pilula-status" data-status style="align-self:flex-start;background:var(--fundo)"><span class="ponto-vivo"></span><span>Conferindo horário…</span></div>
+        <p class="end">Rua Itupava, 1000 · Alto da XV<small>Curitiba · entrega até 5 km</small></p>
+        <ul class="horarios" id="horarios"></ul>
+        <div class="acoes"><a href="#cardapio" class="btn btn-fogo">Montar pedido</a>
+          <a class="btn btn-linha" href="https://www.google.com/maps/search/?api=1&query=Rua+Itupava+Alto+da+XV+Curitiba" target="_blank" rel="noopener">Como chegar</a></div>
+      </div>
+      <div class="mapa revela">
+        <iframe title="Mapa: Rua Itupava, Alto da XV, Curitiba" loading="lazy" src="https://www.google.com/maps?q=Rua+Itupava,+Alto+da+XV,+Curitiba&z=15&hl=pt-BR&output=embed"></iframe>
+        <a class="abrir-mapa" href="https://www.google.com/maps/search/?api=1&query=Rua+Itupava+Alto+da+XV+Curitiba" target="_blank" rel="noopener" aria-label="Abrir no Google Maps"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FECHAMENTO ================= -->
+<section class="fome">
+  <div class="burger-solto" aria-hidden="true"><img src="https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy"></div>
+  <div class="envolve" style="position:relative">
+    <div class="display gigante">Fome?</div>
+    <div class="linha-f"><p>O pedido leva um minuto pra montar e uns 25 pra chegar quentinho.</p>
+      <a href="#cardapio" class="btn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-zap"/></svg>Montar meu pedido</a></div>
+  </div>
+</section>
+</main>
+
+<footer class="rodape">
+  <div class="envolve">
+    <span><b style="color:var(--texto);font:400 18px Anton,sans-serif;letter-spacing:.06em">FERRO<span style="color:var(--fogo)">.</span></b>&nbsp;&nbsp;Projeto conceito. Nome, endereço, preços e contatos são fictícios. Fotos: Unsplash.</span>
+    <a href="../">← Ver outros sites do portfólio</a>
+  </div>
+</footer>
+
+<!-- computador: botão do WhatsApp -->
+<a class="zap-flutua" href="#cardapio" aria-label="Pedir no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-zap"/></svg></a>
+
+<!-- celular: ilha -->
+<div class="ilha" id="ilha" aria-label="Pedido">
+  <button class="resumo" id="ilha-abrir"><b class="num" id="ilha-total">Sua sacola</b><small id="ilha-sub">Toque no + nos itens do cardápio</small></button>
+  <button class="btn btn-zap" style="width:auto;margin:0" id="ilha-enviar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-zap"/></svg>Pedir</button>
+  <a class="ligar" href="#onde" aria-label="Endereço e horários"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></a>
+</div>
+<div class="folha" id="folha"><aside class="sacola" id="sacola-folha" aria-label="Sua sacola"></aside></div>
+
+<!-- janela: como o pedido chega -->
+<div class="janela-fundo" id="janela" role="dialog" aria-modal="true" aria-labelledby="j-tit">
+  <div class="janela">
+    <div class="zap-topo"><i>F.</i><div><b id="j-tit">Ferro Smash Burger</b><small>prévia da mensagem</small></div></div>
+    <div class="conversa"><div class="balao" id="j-msg"></div></div>
+    <p class="nota">No site de verdade, este botão abre o WhatsApp do restaurante com a mensagem pronta. Aqui é um projeto conceito, então só mostramos como ela chega.</p>
+    <div class="acoes-j"><button class="btn btn-linha" id="j-fechar">Voltar</button><button class="btn btn-zap" id="j-ok" style="margin:0">Entendi</button></div>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-zap" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></symbol></svg>
+
+<script>
+(() => {
+const U = (id, w=700) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
+const CARDAPIO = [
+  {cat:'Smash', itens:[
+    {id:'classico', nome:'Clássico', desc:'1 smash de 90 g, cheddar, cebola na chapa, picles e molho da casa.', preco:29, foto:'1568901346375-23c9450c58cd'},
+    {id:'duplo', nome:'Smash duplo', desc:'2 smashes, cheddar em dobro, picles e molho da casa no brioche.', preco:36, foto:'1572802419224-296b0aeee0d9', selo:'Mais pedido'},
+    {id:'bacon', nome:'Bacon crocante', desc:'2 smashes, cheddar, bacon em tiras e cebola caramelizada.', preco:41, foto:'1553979459-d2229ba7433b'},
+    {id:'triplo', nome:'Triplo ferro', desc:'3 smashes, 3 fatias de cheddar e nada mais. Para quem veio com fome.', preco:46, foto:'1678110707493-8d05425137ac'},
+  ]},
+  {cat:'Frango', itens:[
+    {id:'crispy', nome:'Crispy', desc:'Sobrecoxa empanada crocante, maionese de alho, alface e picles.', preco:34, foto:'1761515397046-44035db91504'},
+    {id:'chickbacon', nome:'Crispy bacon', desc:'O Crispy com bacon e cheddar derretido por cima.', preco:39, foto:'1692737348416-0a4fa4cf1523'},
+  ]},
+  {cat:'Batatas', itens:[
+    {id:'rustica', nome:'Batata rústica', desc:'Com casca, alecrim e sal grosso. Porção para dividir.', preco:19, foto:'1630431341973-02e1b662ec35'},
+    {id:'cheddarbacon', nome:'Cheddar e bacon', desc:'Batata frita coberta com cheddar cremoso e bacon picado.', preco:27, foto:'1688912738914-162395536e10'},
+  ]},
+  {cat:'Shakes', itens:[
+    {id:'ddl', nome:'Doce de leite', desc:'Sorvete de creme, doce de leite e chantili. 400 ml.', preco:22, foto:'1572490122747-3968b75cc699'},
+    {id:'choco', nome:'Chocolate', desc:'Sorvete de chocolate, calda e granulado. 400 ml.', preco:22, foto:'1696487773677-c0c8061fe3d2'},
+  ]},
+];
+const TODOS = Object.fromEntries(CARDAPIO.flatMap(c => c.itens).map(i => [i.id, i]));
+// Horário: 0=domingo ... 6=sábado. Segunda fechado.
+const HORARIO = {0:[18,23],1:null,2:[18,23],3:[18,23],4:[18,23],5:[18,23.5],6:[18,23.5]};
+const DIAS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const real = v => 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:0});
+const hm = h => `${Math.floor(h)}h${h%1 ? String(Math.round(h%1*60)).padStart(2,'0') : ''}`;
+
+let sacola = {}; let modo = 'entrega'; let aba = 'Smash';
+try { sacola = JSON.parse(localStorage.getItem('ferro-sacola') || '{}'); } catch {}
+const guardar = () => { try { localStorage.setItem('ferro-sacola', JSON.stringify(sacola)); } catch {} };
+
+/* ---------- status ao vivo (horário de Curitiba) ---------- */
+function agoraCuritiba(){
+  const p = new Intl.DateTimeFormat('en-US',{timeZone:'America/Sao_Paulo',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date());
+  const g = t => p.find(x => x.type === t).value;
+  const d = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday'));
+  return {d, h: (+g('hour') % 24) + (+g('minute'))/60};
+}
+function status(){
+  const {d,h} = agoraCuritiba(), hoje = HORARIO[d];
+  if(hoje && h >= hoje[0] && h < hoje[1]) return [true, `Aberto agora · fecha às ${hm(hoje[1])}`];
+  if(hoje && h < hoje[0]) return [false, `Fechado · abre hoje às ${hm(hoje[0])}`];
+  for(let i=1;i<=7;i++){ const n=(d+i)%7; if(HORARIO[n]) return [false, `Fechado · abre ${i===1?'amanhã':DIAS[n].toLowerCase()} às ${hm(HORARIO[n][0])}`]; }
+}
+function pintarStatus(){
+  const [ab, tx] = status();
+  document.querySelectorAll('[data-status]').forEach(el => { el.querySelector('.ponto-vivo').classList.toggle('off', !ab); el.lastElementChild.textContent = tx; });
+  const d = agoraCuritiba().d;
+  document.getElementById('horarios').innerHTML = [2,3,4,5,6,0,1].map(i => `<li class="${i===d?'hoje':''}"><span>${DIAS[i]}</span><span class="num">${HORARIO[i] ? hm(HORARIO[i][0])+' às '+hm(HORARIO[i][1]) : 'Fechado'}</span></li>`).join('');
+}
+
+/* ---------- cardápio ---------- */
+function pintarAbas(){
+  document.getElementById('abas').innerHTML = CARDAPIO.map(c => `<button role="tab" aria-selected="${c.cat===aba}" data-aba="${c.cat}">${c.cat}</button>`).join('');
+}
+function controle(i){
+  const q = sacola[i.id] || 0;
+  return q ? `<div class="passo" data-id="${i.id}"><button data-m="-1" aria-label="Tirar um ${i.nome}">−</button><span class="q num">${q}</span><button data-m="1" aria-label="Mais um ${i.nome}">+</button></div>`
+           : `<button class="add" data-id="${i.id}" data-m="1" aria-label="Adicionar ${i.nome}">+ Adicionar</button>`;
+}
+function pintarPratos(){
+  const c = CARDAPIO.find(c => c.cat === aba);
+  document.getElementById('pratos').innerHTML = c.itens.map((i,k) => `
+    <article class="prato" style="animation-delay:${k*.05}s">
+      <div class="ft">${i.selo?`<span class="selo">${i.selo}</span>`:''}<img src="${U(i.foto)}" alt="${i.nome}" loading="lazy"></div>
+      <div class="tx"><h3>${i.nome}</h3><p>${i.desc}</p>
+        <div class="rod"><span class="preco num">${real(i.preco)}</span><span data-ctl="${i.id}">${controle(i)}</span></div></div>
+    </article>`).join('');
+}
+function totais(){
+  const itens = Object.entries(sacola).filter(([,q]) => q > 0);
+  const qtd = itens.reduce((a,[,q]) => a+q, 0);
+  const sub = itens.reduce((a,[id,q]) => a + TODOS[id].preco*q, 0);
+  const taxa = modo === 'entrega' && qtd ? 6 : 0;
+  return {itens, qtd, sub, taxa, total: sub + taxa};
+}
+function htmlSacola(folha){
+  const t = totais();
+  return `${folha?'<div class="puxador"></div>':''}<h3>Sua sacola <span class="num">${t.qtd} ${t.qtd===1?'item':'itens'}</span></h3>
+    ${t.qtd ? `<ul>${t.itens.map(([id,q]) => `<li><span class="x num">${q}×</span><span>${TODOS[id].nome}</span><span style="display:flex;gap:6px;align-items:center"><span class="num">${real(TODOS[id].preco*q)}</span><button data-id="${id}" data-m="-1" aria-label="Tirar um ${TODOS[id].nome}">−</button></span></li>`).join('')}</ul>`
+      : `<p class="vazia">Sua sacola está vazia. Toque em <b>+ Adicionar</b> nos itens do cardápio.</p>`}
+    <div class="modo" role="group" aria-label="Como receber"><button aria-pressed="${modo==='entrega'}" data-modo="entrega">Entrega</button><button aria-pressed="${modo==='retirada'}" data-modo="retirada">Retirar no balcão</button></div>
+    <div class="soma"><span>Total</span><b class="num">${real(t.total)}</b></div>
+    <div class="obs">${modo==='entrega' ? (t.qtd ? `Inclui ${real(6)} de entrega (até 5 km)` : 'Entrega até 5 km por R$ 6') : 'Fica pronto em uns 20 minutos'}</div>
+    <button class="btn btn-zap" data-enviar ${t.qtd?'':'disabled'}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-zap"/></svg>Enviar pedido no WhatsApp</button>`;
+}
+function pintarSacola(){
+  document.getElementById('sacola-lateral').innerHTML = htmlSacola(false);
+  document.getElementById('sacola-folha').innerHTML = htmlSacola(true);
+  const t = totais();
+  const cq = document.getElementById('cab-qtd'); cq.hidden = !t.qtd; cq.textContent = t.qtd;
+  document.getElementById('ilha-total').textContent = t.qtd ? `${real(t.total)} · ${t.qtd} ${t.qtd===1?'item':'itens'}` : 'Sua sacola';
+  document.getElementById('ilha-sub').textContent = t.qtd ? 'Toque para ver a sacola' : 'Toque no + nos itens do cardápio';
+  document.getElementById('ilha-enviar').disabled = !t.qtd;
+  document.getElementById('ilha-enviar').style.opacity = t.qtd ? 1 : .5;
+}
+function mudar(id, m){
+  sacola[id] = Math.max(0, (sacola[id]||0) + m); if(!sacola[id]) delete sacola[id];
+  guardar(); pintarSacola();
+  const ctl = document.querySelector(`[data-ctl="${id}"]`); if(ctl) ctl.innerHTML = controle(TODOS[id]);
+}
+function mensagem(){
+  const t = totais();
+  return `Oi, Ferro! Quero fazer um pedido:\n\n${t.itens.map(([id,q]) => `• ${q}× ${TODOS[id].nome} — ${real(TODOS[id].preco*q)}`).join('\n')}\n\n${modo==='entrega' ? `Entrega: ${real(t.taxa)}\nTotal: ${real(t.total)}\n\nEndereço: ` : `Total: ${real(t.total)}\nVou retirar no balcão.\n\nNome: `}`;
+}
+function abrirJanela(){
+  if(!totais().qtd) return;
+  fecharFolha();
+  const h = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('j-msg').innerHTML = mensagem().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])) + `<small>${h} ✓✓</small>`;
+  document.getElementById('janela').classList.add('aberta');
+  document.getElementById('j-ok').focus();
+}
+const fecharJanela = () => document.getElementById('janela').classList.remove('aberta');
+const abrirFolha = () => document.getElementById('folha').classList.add('aberta');
+const fecharFolha = () => document.getElementById('folha').classList.remove('aberta');
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-aba]'); if(a){ aba = a.dataset.aba; pintarAbas(); pintarPratos(); return; }
+  const m = e.target.closest('[data-m]'); if(m){ const id = m.dataset.id || m.closest('[data-id]').dataset.id; mudar(id, +m.dataset.m); return; }
+  const md = e.target.closest('[data-modo]'); if(md){ modo = md.dataset.modo; pintarSacola(); return; }
+  if(e.target.closest('[data-enviar]') || e.target.closest('#ilha-enviar')){ abrirJanela(); return; }
+  if(e.target.closest('#ilha-abrir')){ abrirFolha(); return; }
+  if(e.target.closest('#j-fechar') || e.target.closest('#j-ok') || e.target.id === 'janela'){ fecharJanela(); return; }
+  if(document.getElementById('folha').classList.contains('aberta') && !e.target.closest('#folha')) fecharFolha();
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ fecharJanela(); fecharFolha(); } });
+
+/* ---------- rolagem: cabeçalho, ilha, revelar ---------- */
+const cab = document.getElementById('cab');
+const aoRolar = () => { const y = scrollY; cab.classList.toggle('rolou', y > 20); document.body.classList.toggle('ilha-on', y > 400); };
+addEventListener('scroll', aoRolar, {passive:true}); aoRolar();
+const obs = new IntersectionObserver(es => es.forEach(x => { if(x.isIntersecting){ x.target.classList.add('visto'); obs.unobserve(x.target); } }), {threshold:.12});
+document.querySelectorAll('.revela').forEach(el => obs.observe(el));
+
+pintarStatus(); setInterval(pintarStatus, 60000);
+pintarAbas(); pintarPratos(); pintarSacola();
+})();
+</script>
+</body>
+</html>
