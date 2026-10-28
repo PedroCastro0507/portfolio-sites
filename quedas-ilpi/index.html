@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Quedas ILPI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Protótipo acadêmico para notificação e registro de quedas em ILPI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout "Plantão": título compacto, etapas horizontais nomeadas, formulário + trilho com a conduta imediata.
+   No celular: trilho desce, botão "Conduta" no topo da etapa, alvos de toque maiores, ações fixas embaixo.
+   Revisão "Ficha": todas as opções aparecem, marcadas ☒ e não marcadas ☐. */
+:root {
+  --bg: #edf1ee;
+  --surface: #fbfcfa;
+  --surface-2: #f3f6f3;
+  --ink: #16302d;
+  --muted: #536662;
+  --line: #d3dcd8;
+  --line-strong: #b9c7c2;
+  --accent: #0f766e;
+  --accent-strong: #0a554f;
+  --accent-soft: #e0efeb;
+  --on-accent: #ffffff;
+  --gold: #e7ab3a;
+  --gold-soft: #fbf1d8;
+  --gold-line: #ead49d;
+  --gold-ink: #4e3a0d;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --overlay: rgba(14, 32, 30, 0.45);
+  --shadow: 0 18px 50px rgba(23, 49, 47, 0.08);
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1817; --surface: #142220; --surface-2: #1a2b29; --ink: #e2ece9; --muted: #9db1ad;
+    --line: #2a3f3c; --line-strong: #3b5450; --accent: #3db7a8; --accent-strong: #74d4c7; --accent-soft: #163935; --on-accent: #05201c;
+    --gold: #e6b252; --gold-soft: #2a2416; --gold-line: #4d4022; --gold-ink: #f0d79f;
+    --danger: #ff8b7b; --danger-soft: #3a1b17; --overlay: rgba(0, 0, 0, 0.6); --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1817; --surface: #142220; --surface-2: #1a2b29; --ink: #e2ece9; --muted: #9db1ad;
+  --line: #2a3f3c; --line-strong: #3b5450; --accent: #3db7a8; --accent-strong: #74d4c7; --accent-soft: #163935; --on-accent: #05201c;
+  --gold: #e6b252; --gold-soft: #2a2416; --gold-line: #4d4022; --gold-ink: #f0d79f;
+  --danger: #ff8b7b; --danger-soft: #3a1b17; --overlay: rgba(0, 0, 0, 0.6); --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+button, input, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Cabeçalho */
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand-mark { flex: 0 0 auto; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; }
+.brand-text { min-width: 0; }
+.brand-text strong { display: block; font-size: 0.96rem; }
+.brand-text small { display: block; color: var(--muted); font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+
+/* Botões */
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid transparent; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; text-decoration: none; }
+.button:active { transform: translateY(1px); }
+.button-primary { background: var(--accent); color: var(--on-accent); }
+.button-primary:hover { background: var(--accent-strong); }
+.button-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+.button-secondary:hover { border-color: var(--accent); }
+.button-quiet { background: transparent; color: var(--accent-strong); border-color: var(--line); min-height: 40px; padding: 0 14px; font-size: 0.86rem; }
+.button-quiet:hover { background: var(--accent-soft); }
+.button-danger { background: transparent; color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); }
+.button-danger:hover, .button-danger.is-confirming { background: var(--danger-soft); border-color: var(--danger); }
+.button-small { min-height: 38px; padding: 0 12px; font-size: 0.85rem; }
+.button-gold { background: var(--gold-soft); color: var(--gold-ink); border-color: var(--gold-line); min-height: 40px; padding: 0 14px; font-size: 0.88rem; }
+.icon-button { width: 40px; padding: 0; }
+.icon-button svg { width: 18px; height: 18px; }
+.link-button { background: none; border: 0; padding: 6px 0; min-height: 36px; text-align: left; color: var(--accent-strong); font-weight: 700; font-size: 0.92rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-button.danger { color: var(--danger); }
+.link-button.danger.is-confirming { background: var(--danger-soft); padding: 6px 10px; border-radius: 8px; text-decoration: none; }
+
+/* Abertura compacta */
+.intro { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 10px 24px; padding-block: 26px 18px; }
+.intro > div { min-width: 0; flex: 1 1 520px; }
+.eyebrow { color: var(--accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.intro h1 { font-size: clamp(1.55rem, 2.6vw, 2.1rem); line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 6px; }
+.intro-copy { color: var(--muted); font-size: 0.97rem; max-width: 72ch; }
+.intro-meta { color: var(--muted); font-size: 0.86rem; white-space: nowrap; }
+
+/* Área de trabalho */
+.workspace { scroll-margin-top: 80px; display: flex; flex-direction: column; gap: 18px; }
+.steps-bar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--steps, 6), minmax(0, 1fr)); gap: 6px; }
+.steps-bar button { width: 100%; display: flex; flex-direction: column; align-items: stretch; gap: 7px; padding: 4px 0; border: 0; background: none; text-align: left; color: var(--muted); font-size: 0.86rem; cursor: default; }
+.steps-bar .bar { height: 5px; border-radius: 5px; background: var(--line); transition: background .2s; }
+.steps-bar .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steps-bar .is-complete button { color: var(--accent-strong); font-weight: 700; cursor: pointer; }
+.steps-bar .is-complete button:hover .lbl { text-decoration: underline; }
+.steps-bar .is-complete .bar { background: var(--accent); }
+.steps-bar .is-complete .lbl::after { content: " ✓"; }
+.steps-bar .is-current button { color: var(--ink); font-weight: 700; }
+.steps-bar .is-current .bar { background: var(--gold); }
+
+.work-grid { display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start; }
+.form-shell { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.form-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px 16px; flex-wrap: wrap; padding: 26px clamp(18px, 3.5vw, 34px) 18px; border-bottom: 1px solid var(--line); }
+.form-heading h2 { font-size: clamp(1.55rem, 2.6vw, 2rem); line-height: 1.12; }
+.form-heading h2:focus { outline: none; }
+.heading-sub { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; color: var(--muted); font-size: 0.88rem; }
+.req { color: var(--danger); font-weight: 700; }
+.conduct-toggle { display: none; }
+#fallForm { display: flex; flex-direction: column; flex: 1; }
+#stepsHost { padding: 24px clamp(18px, 3.5vw, 34px) 8px; }
+.step-help { color: var(--muted); margin-bottom: 18px; }
+
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 18px; }
+.field { grid-column: 1 / -1; min-width: 0; display: grid; gap: 7px; margin: 0; padding: 0; border: 0; }
+.field.half { grid-column: span 1; }
+.field > label, .field > legend { font-weight: 700; font-size: 0.97rem; padding: 0; }
+.field input[type="text"], .field input[type="date"], .field input[type="time"], .field textarea {
+  width: 100%; min-height: 48px; padding: 11px 14px; border: 1.5px solid var(--line-strong); border-radius: 12px; background: var(--surface); transition: border-color .15s, box-shadow .15s;
+}
+.field textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.field.has-error input, .field.has-error textarea { border-color: var(--danger); }
+.field.has-error .choice-grid { outline: 2px solid var(--danger); outline-offset: 4px; border-radius: 12px; }
+.err { color: var(--danger); font-size: 0.86rem; font-weight: 700; }
+
+.choice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 8px; margin-top: 2px; }
+.choice-grid.compact { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); max-width: 480px; }
+.choice { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; border: 1.5px solid var(--line-strong); border-radius: 12px; background: var(--surface); cursor: pointer; font-size: 0.95rem; line-height: 1.3; transition: border-color .15s, background .15s; }
+.choice span { min-width: 0; overflow-wrap: anywhere; }
+.choice:hover { border-color: var(--accent); }
+.choice input { flex: 0 0 auto; width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.choice:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.choice:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Pergunta que depende de outra: ligada por um conector, com o motivo escrito */
+.nested { grid-column: 1 / -1; position: relative; margin: -8px 0 0 14px; padding: 14px 0 0 30px; display: grid; gap: 7px; }
+.nested > .field { gap: 7px; }
+.nested::before { content: ""; position: absolute; left: 0; top: 0; width: 18px; height: 34px; border-left: 2px solid var(--line-strong); border-bottom: 2px solid var(--line-strong); border-bottom-left-radius: 10px; }
+.cond-hint { font-size: 0.84rem; color: var(--muted); font-weight: 400; }
+.cond-hint b { color: var(--ink); }
+
+/* Barra de ações */
+.form-actions { position: sticky; bottom: 0; display: flex; gap: 10px; align-items: center; margin-top: 18px; padding: 14px clamp(18px, 3.5vw, 34px) calc(14px + env(safe-area-inset-bottom, 0px)); background: var(--surface-2); border-top: 1px solid var(--line); border-radius: 0 0 var(--radius) var(--radius); z-index: 5; }
+.form-actions .spacer { flex: 1; }
+
+/* Trilho lateral */
+.rail { flex: 1 1 290px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+@media (min-width: 1000px) { .rail { position: sticky; top: 76px; } }
+.rail-card { padding: 18px 20px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+.rail-card h2 { font-family: var(--font-body); font-size: 1rem; font-weight: 700; }
+.rail-card.conduct { background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold-ink); font-size: 0.92rem; }
+.rail-card.conduct ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.so-far { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; font-size: 0.9rem; }
+.so-far dt { color: var(--muted); }
+.so-far dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.so-far-empty { color: var(--muted); font-size: 0.9rem; }
+.rail-tools { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 6px 0; }
+.rail-tools .label { color: var(--muted); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.rail-tools p { color: var(--muted); font-size: 0.82rem; }
+
+/* Revisão "Ficha" e registro salvo */
+.review-callout { padding: 12px 16px; border-radius: 12px; background: var(--gold-soft); border: 1px solid var(--gold-line); color: var(--gold-ink); margin-bottom: 18px; }
+.record-sections { display: grid; gap: 22px; }
+.record-section { display: flex; flex-direction: column; gap: 8px; }
+.record-section header { display: flex; align-items: baseline; gap: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.record-section .sec-num { font-family: var(--font-mono); color: var(--accent); font-weight: 600; }
+.record-section h3 { font-family: var(--font-body); font-size: 1.02rem; font-weight: 700; flex: 1; }
+.record-rows { display: grid; grid-template-columns: minmax(150px, 30%) minmax(0, 1fr); }
+.record-rows > div { padding: 9px 10px; border-bottom: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.record-rows .r-label { color: var(--muted); font-size: 0.9rem; padding-left: 0; }
+.record-rows .r-value { font-weight: 700; }
+.record-rows .r-value.empty { color: var(--muted); font-weight: 400; font-style: italic; }
+.opts { display: flex; flex-wrap: wrap; gap: 4px 18px; font-weight: 400; }
+.opt { color: var(--muted); }
+.opt.on { color: var(--ink); font-weight: 700; }
+.opt .box { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-right: 7px; border: 1.5px solid currentColor; border-radius: 4px; font-size: 11px; line-height: 1; vertical-align: -2px; }
+.opt.on .box { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+.saved-record { padding: clamp(20px, 4vw, 40px); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); scroll-margin-top: 80px; margin-top: 8px; }
+.saved-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.saved-heading h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.saved-meta { color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
+.saved-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Painel da professora */
+.teacher { margin-top: 28px; border: 1px dashed var(--line-strong); border-radius: var(--radius); background: var(--surface); }
+.teacher summary { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; font-weight: 700; list-style: none; flex-wrap: wrap; }
+.teacher summary::-webkit-details-marker { display: none; }
+.teacher summary .tag { margin-left: auto; font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+.teacher-body { padding: 0 20px 22px; display: grid; gap: 16px; }
+.teacher-body p, .teacher-body li { color: var(--muted); max-width: 75ch; }
+.teacher-body ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.teacher-body code { font-family: var(--font-mono); font-size: 0.84em; background: var(--surface-2); padding: 1px 6px; border-radius: 6px; color: var(--ink); }
+.types { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 8px; }
+.types div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 0.86rem; color: var(--muted); }
+.config-editor { width: 100%; min-height: 360px; padding: 14px; border: 1.5px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5; tab-size: 2; resize: vertical; white-space: pre; overflow: auto; }
+.config-editor:focus { outline: none; border-color: var(--accent); }
+.config-status { font-size: 0.88rem; font-weight: 700; }
+.config-status.ok { color: var(--accent-strong); }
+.config-status.bad { color: var(--danger); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--gold-soft); border: 1px solid var(--gold-line); color: var(--gold-ink); font-size: 0.76rem; font-weight: 700; }
+
+/* Rodapé */
+footer { padding-block: 32px calc(40px + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.86rem; display: grid; gap: 4px; }
+.disclaimer { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 0.82rem; }
+
+/* Sobreposições */
+.overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: var(--overlay); padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.overlay-card { width: min(720px, 100%); max-height: 90vh; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.overlay-card h3 { font-size: 1.35rem; }
+.overlay-card p { color: var(--muted); font-size: 0.92rem; }
+.overlay-card textarea { flex: 1; min-height: 240px; width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); font-family: var(--font-mono); font-size: 0.8rem; resize: vertical; }
+.overlay-card.conduct { background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold-ink); }
+.overlay-card.conduct p { color: var(--gold-ink); }
+.overlay-card.conduct ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.toast { position: fixed; left: 50%; top: calc(74px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); z-index: 60; max-width: min(520px, calc(100% - 32px)); padding: 12px 18px; border-radius: 12px; background: var(--ink); color: var(--surface); font-weight: 700; font-size: 0.9rem; box-shadow: var(--shadow); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .steps-bar .lbl { display: none; }
+  .steps-bar button { padding: 8px 0; }
+  .steps-bar .bar { height: 6px; }
+  .conduct-toggle { display: inline-flex; }
+  .rail-card.conduct { display: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 17px; }
+  .brand-text small { display: none; }
+  .header-actions .label-long { display: none; }
+  .intro { padding-block: 18px 12px; }
+  .intro-copy { display: none; }
+  .form-grid { grid-template-columns: 1fr; }
+  .field.half { grid-column: 1 / -1; }
+  .choice { min-height: 56px; font-size: 1rem; }
+  .choice input { width: 20px; height: 20px; }
+  .choice-grid.compact { max-width: none; grid-template-columns: 1fr 1fr; }
+  .field input[type="text"], .field input[type="date"], .field input[type="time"] { min-height: 52px; }
+  .nested { margin-left: 8px; padding-left: 24px; }
+  .record-rows { grid-template-columns: 1fr; }
+  .record-rows .r-label { padding-bottom: 0; border-bottom: 0; }
+  .form-actions .button { min-height: 54px; }
+  .form-actions .button-primary { flex: 1; }
+  .form-actions .spacer { display: none; }
+  .form-actions .dest { display: none; }
+  .saved-actions .button { flex: 1 1 calc(50% - 8px); }
+}
+</style>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <span class="brand-mark" id="brandMark" aria-hidden="true">RQ</span>
+      <span class="brand-text"><strong id="brandName"></strong><small id="brandSub"></small></span>
+    </div>
+    <div class="header-actions">
+      <button id="viewSavedButton" class="button button-quiet" type="button" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg>
+        <span><span class="label-long">Ver </span>registro salvo</span>
+      </button>
+      <button id="themeButton" class="button button-quiet icon-button" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="inicio">
+  <section class="intro" aria-labelledby="pageTitle">
+    <div>
+      <p class="eyebrow" id="introEyebrow"></p>
+      <h1 id="pageTitle"></h1>
+      <p class="intro-copy" id="introCopy"></p>
+    </div>
+    <p class="intro-meta" id="introMeta"></p>
+  </section>
+
+  <section id="wizard" class="workspace" aria-labelledby="formTitle">
+    <nav aria-label="Etapas do registro">
+      <ol class="steps-bar" id="stepList"></ol>
+    </nav>
+
+    <div class="work-grid">
+      <div class="form-shell">
+        <div class="form-heading">
+          <div>
+            <p class="eyebrow" id="stepCounter"></p>
+            <h2 id="formTitle" tabindex="-1"></h2>
+            <p class="heading-sub"><span><span class="req">*</span> <span id="requiredHint"></span></span><span id="nextHint"></span></p>
+          </div>
+          <button id="conductToggle" class="button button-gold conduct-toggle" type="button"></button>
+        </div>
+
+        <form id="fallForm" novalidate>
+          <div id="stepsHost"></div>
+          <div class="form-actions">
+            <button id="previousButton" class="button button-secondary" type="button" hidden></button>
+            <span class="spacer"></span>
+            <button id="nextButton" class="button button-primary" type="button"></button>
+            <button id="saveButton" class="button button-primary" type="submit" hidden></button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="rail" aria-label="Apoio ao preenchimento">
+        <section class="rail-card conduct" aria-labelledby="conductTitle">
+          <h2 id="conductTitle"></h2>
+          <p id="conductLead"></p>
+          <ul id="conductList"></ul>
+        </section>
+        <section class="rail-card" aria-labelledby="soFarTitle">
+          <h2 id="soFarTitle"></h2>
+          <div id="soFar"></div>
+        </section>
+        <div class="rail-tools">
+          <span class="label" id="toolsLabel"></span>
+          <button id="exampleButton" class="link-button" type="button"></button>
+          <button id="clearButton" class="link-button danger" type="button"></button>
+          <p id="noteText"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="savedRecord" class="saved-record" aria-labelledby="savedTitle" hidden>
+    <div class="saved-heading">
+      <div>
+        <p class="eyebrow" id="savedEyebrow"></p>
+        <h2 id="savedTitle" tabindex="-1"></h2>
+        <p class="saved-meta" id="savedMeta"></p>
+      </div>
+      <div class="saved-actions">
+        <button id="exportJsonButton" class="button button-secondary button-small" type="button"></button>
+        <button id="exportPrintButton" class="button button-secondary button-small" type="button"></button>
+        <button id="savedClearButton" class="button button-danger button-small" type="button"></button>
+        <button id="newRecordButton" class="button button-primary button-small" type="button"></button>
+      </div>
+    </div>
+    <div id="savedContent" class="record-sections"></div>
+  </section>
+
+  <details class="teacher" id="teacherPanel">
+    <summary>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>
+      Ajustar conteúdo do formulário
+      <span class="tag">para a professora · sem programar</span>
+    </summary>
+    <div class="teacher-body">
+      <p>Tudo o que aparece na tela (títulos, rótulos das etapas, perguntas, opções, mensagens e o exemplo fictício) está no texto abaixo. Altere só o que está entre aspas e clique em <strong>Aplicar neste navegador</strong>.</p>
+      <ol>
+        <li>Para trocar um texto, edite o valor entre aspas, por exemplo <code>"rotulo": "Local do evento"</code>.</li>
+        <li>Para incluir uma opção, acrescente um item na lista <code>"opcoes"</code>, separado por vírgula.</li>
+        <li><code>"obrigatorio": true</code> exige a resposta antes de avançar; <code>false</code> torna opcional.</li>
+        <li><code>"mostrarSe"</code> faz uma pergunta aparecer só quando outra tiver a resposta indicada.</li>
+        <li>As mudanças valem só neste navegador. Para valer para todos que abrirem o link, baixe a configuração e envie ao responsável pelo protótipo.</li>
+      </ol>
+      <div class="types" aria-label="Tipos de pergunta disponíveis">
+        <div><code>texto</code><br>resposta curta</div>
+        <div><code>texto-longo</code><br>parágrafo (use "linhas")</div>
+        <div><code>data</code> · <code>hora</code><br>calendário e relógio</div>
+        <div><code>escolha-unica</code><br>uma opção (use "opcoes")</div>
+        <div><code>escolha-multipla</code><br>várias opções (use "opcoes")</div>
+        <div><code>"outro"</code><br>abre campo de texto ao marcar a opção indicada</div>
+      </div>
+      <label for="configEditor" class="sr-only">Configuração do formulário</label>
+      <textarea id="configEditor" class="config-editor" spellcheck="false"></textarea>
+      <p id="configStatus" class="config-status" role="status" aria-live="polite"></p>
+      <div class="row">
+        <button id="configApply" class="button button-primary button-small" type="button">Aplicar neste navegador</button>
+        <button id="configDownload" class="button button-secondary button-small" type="button">Baixar configuração (.json)</button>
+        <button id="configReset" class="button button-danger button-small" type="button">Restaurar conteúdo original</button>
+        <span id="configBadge" class="badge" hidden>Conteúdo personalizado ativo</span>
+      </div>
+    </div>
+  </details>
+</main>
+
+<footer class="wrap">
+  <div id="footerLines"></div>
+  <p class="disclaimer" id="footerDisclaimer"></p>
+</footer>
+
+<div id="conductOverlay" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="conductOverlayTitle">
+  <div class="overlay-card conduct">
+    <h3 id="conductOverlayTitle"></h3>
+    <p id="conductOverlayLead"></p>
+    <ul id="conductOverlayList"></ul>
+    <div class="row"><button id="conductClose" class="button button-secondary button-small" type="button">Fechar</button></div>
+  </div>
+</div>
+
+<div id="exportOverlay" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+  <div class="overlay-card">
+    <h3 id="exportTitle">Copiar registro</h3>
+    <p id="exportText">O download não está disponível nesta visualização. Copie o conteúdo abaixo e cole em um arquivo de texto.</p>
+    <label for="exportArea" class="sr-only">Conteúdo para copiar</label>
+    <textarea id="exportArea" readonly></textarea>
+    <div class="row">
+      <button id="exportCopy" class="button button-primary button-small" type="button">Copiar</button>
+      <button id="exportClose" class="button button-secondary button-small" type="button">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* =====================================================================
+   CONFIGURAÇÃO DO CONTEÚDO — QUEDAS ILPI
+   ---------------------------------------------------------------------
+   Tudo o que aparece na tela vem deste bloco. Para ajustar o conteúdo,
+   altere apenas os textos entre aspas. Não é preciso mexer no restante
+   do script (abaixo da linha "FIM DA CONFIGURAÇÃO").
+
+   Estrutura:
+   - app ........... nome, título e introdução da página
+   - conduta ....... orientações de conduta imediata (quadro amarelo)
+   - etapas ........ as cinco etapas de preenchimento, na ordem
+   - revisao ....... a sexta etapa (revisão antes de salvar)
+   - textos ........ botões, mensagens, rodapé e aviso
+   - exemplo ....... dados fictícios do botão "Preencher exemplo"
+
+   Cada pergunta (campo) de uma etapa aceita:
+   - nome ......... identificador interno único (não aparece na tela)
+   - tipo ......... "texto" | "texto-longo" | "data" | "hora"
+                    | "escolha-unica" | "escolha-multipla"
+   - rotulo ....... a pergunta como aparece na tela e no registro
+   - obrigatorio .. true exige resposta para avançar de etapa
+   - largura ...... "metade" para ocupar meia linha no computador
+   - linhas ....... altura do campo "texto-longo"
+   - opcoes ....... lista de opções (tipos de escolha)
+   - outro ........ { valor, nome, rotulo }: ao marcar a opção "valor",
+                    abre um campo de texto para detalhar
+   - mostrarSe .... { campo, valor }: a pergunta só aparece quando o
+                    campo indicado tiver o valor indicado
+   - ajuda ........ (só na etapa) texto de orientação acima das perguntas
+   ===================================================================== */
+const CONFIG = {
+  app: {
+    sigla: "RQ",
+    nome: "Registro de Quedas",
+    instituicao: "Instituição de Longa Permanência para Idosos",
+    chamada: "Protocolo institucional",
+    titulo: "Notificação de queda ou perda de equilíbrio",
+    introducao:
+      "Registre o evento, a avaliação inicial, os fatores possivelmente associados e as medidas preventivas. O formulário segue exclusivamente os campos previstos no protocolo fornecido.",
+    // {etapas} é trocado pelo número total de etapas
+    selos: ["{etapas} etapas", "Salvo neste navegador"],
+  },
+
+  conduta: {
+    titulo: "Conduta imediata após o evento",
+    botao: "Conduta",
+    paragrafo:
+      "Não levantar ou movimentar o residente imediatamente sem avaliação inicial, salvo situação de risco ambiental iminente.",
+    itens: [
+      "Verificar nível de consciência e responsividade.",
+      "Avaliar dor, sangramento, ferimentos, deformidades, limitação de movimento, tontura, alteração de fala ou comportamento e possível trauma craniano.",
+      "Acionar o profissional responsável conforme o fluxo assistencial da instituição.",
+      "Realizar transferência ou levantamento somente quando considerado seguro.",
+      "Registrar o evento o mais breve possível.",
+      "Comunicar a equipe multiprofissional e, conforme as normas da instituição, o responsável.",
+      "Investigar fatores associados e estabelecer medidas preventivas.",
+    ],
+  },
+
+  etapas: [
+    /* ---------- ETAPA 1 ---------- */
+    {
+      rotuloCurto: "Identificação",
+      titulo: "Identificação do evento",
+      campos: [
+        { nome: "residentName", tipo: "texto", rotulo: "Nome do residente", obrigatorio: true },
+        { nome: "eventDate", tipo: "data", rotulo: "Data", obrigatorio: true, largura: "metade" },
+        { nome: "eventTime", tipo: "hora", rotulo: "Horário", obrigatorio: true, largura: "metade" },
+        { nome: "eventLocation", tipo: "texto", rotulo: "Local do evento", obrigatorio: true },
+        { nome: "identifiedBy", tipo: "texto", rotulo: "Profissional que identificou", obrigatorio: true },
+        { nome: "hasWitness", tipo: "escolha-unica", rotulo: "Havia testemunha?", obrigatorio: true, opcoes: ["Sim", "Não"] },
+        { nome: "witnessName", tipo: "texto", rotulo: "Quem?", mostrarSe: { campo: "hasWitness", valor: "Sim" } },
+      ],
+    },
+
+    /* ---------- ETAPA 2 ---------- */
+    {
+      rotuloCurto: "Caracterização",
+      titulo: "Caracterização do evento",
+      campos: [
+        {
+          nome: "mechanism", tipo: "escolha-unica", rotulo: "Mecanismo provável", obrigatorio: true,
+          opcoes: ["Perda de equilíbrio", "Escorregamento", "Tropeço", "Deslizamento na cadeira/poltrona", "Queda da cama", "Transferência", "Outro"],
+          outro: { valor: "Outro", nome: "mechanismOther", rotulo: "Outro mecanismo" },
+        },
+        {
+          nome: "reachedGround", tipo: "escolha-unica", rotulo: "Chegou ao chão?", obrigatorio: true,
+          opcoes: ["Sim", "Não — amparado", "Não — apoiou-se em parede/móvel", "Não — deslizou na cadeira/poltrona"],
+        },
+        {
+          nome: "activity", tipo: "escolha-unica", rotulo: "O que fazia no momento?", obrigatorio: true,
+          opcoes: ["Caminhando", "Levantando-se", "Sentando-se", "Transferindo-se", "Indo ao banheiro", "Banho", "Atividade", "Outro"],
+          outro: { valor: "Outro", nome: "activityOther", rotulo: "Outra atividade" },
+        },
+        {
+          nome: "assistiveDevice", tipo: "escolha-unica", rotulo: "Dispositivo de auxílio?", obrigatorio: true,
+          opcoes: ["Não", "Bengala", "Andador", "Cadeira de rodas", "Outro"],
+          outro: { valor: "Outro", nome: "assistiveDeviceOther", rotulo: "Outro dispositivo" },
+        },
+        { nome: "eventDescription", tipo: "texto-longo", rotulo: "Descrição objetiva do ocorrido", obrigatorio: true, linhas: 5 },
+      ],
+    },
+
+    /* ---------- ETAPA 3 ---------- */
+    {
+      rotuloCurto: "Avaliação",
+      titulo: "Avaliação imediata",
+      campos: [
+        { nome: "responsiveness", tipo: "escolha-unica", rotulo: "Consciência/responsividade", obrigatorio: true, opcoes: ["Preservada", "Alterada"] },
+        { nome: "pain", tipo: "escolha-unica", rotulo: "Dor", obrigatorio: true, opcoes: ["Não", "Sim"] },
+        { nome: "painLocation", tipo: "texto", rotulo: "Local da dor", mostrarSe: { campo: "pain", valor: "Sim" } },
+        { nome: "apparentInjury", tipo: "escolha-unica", rotulo: "Lesão aparente", obrigatorio: true, opcoes: ["Não", "Sim"] },
+        {
+          nome: "injuryTypes", tipo: "escolha-multipla", rotulo: "Tipo de lesão aparente",
+          mostrarSe: { campo: "apparentInjury", valor: "Sim" },
+          opcoes: ["Escoriação", "Hematoma", "Corte/sangramento", "Edema", "Deformidade", "Outra"],
+          outro: { valor: "Outra", nome: "injuryOther", rotulo: "Outra lesão" },
+        },
+        { nome: "movement", tipo: "escolha-unica", rotulo: "Movimentação", obrigatorio: true, opcoes: ["Preservada", "Limitada", "Não realizar até avaliação"] },
+        {
+          nome: "otherSigns", tipo: "escolha-multipla", rotulo: "Outros sinais",
+          opcoes: ["Tontura", "Náusea", "Alteração da fala", "Alteração comportamental", "Suspeita de trauma craniano", "Outro"],
+          outro: { valor: "Outro", nome: "otherSignText", rotulo: "Outro sinal" },
+        },
+        { nome: "conduct", tipo: "texto-longo", rotulo: "Conduta realizada", obrigatorio: true, linhas: 4 },
+        { nome: "evaluator", tipo: "texto", rotulo: "Profissional responsável pela avaliação", obrigatorio: true },
+      ],
+    },
+
+    /* ---------- ETAPA 4 ---------- */
+    {
+      rotuloCurto: "Fatores associados",
+      titulo: "Fatores possivelmente associados",
+      ajuda: "Selecione todos os fatores identificados no evento.",
+      campos: [
+        {
+          nome: "environmentalFactors", tipo: "escolha-multipla", rotulo: "Ambientais",
+          opcoes: ["Piso molhado", "Obstáculo/tapete", "Iluminação inadequada", "Mobiliário inadequado", "Calçado inadequado", "Outro"],
+          outro: { valor: "Outro", nome: "environmentalOther", rotulo: "Outro fator ambiental" },
+        },
+        {
+          nome: "residentFactors", tipo: "escolha-multipla", rotulo: "Relacionados ao residente",
+          opcoes: ["Fraqueza muscular", "Alteração do equilíbrio", "Alteração da marcha", "Tontura/mal-estar", "Alteração cognitiva/comportamental", "Necessidade de auxílio", "Outro"],
+          outro: { valor: "Outro", nome: "residentOther", rotulo: "Outro fator relacionado ao residente" },
+        },
+        {
+          nome: "careSituation", tipo: "escolha-multipla", rotulo: "Situação assistencial",
+          opcoes: ["Sem supervisão", "Transferência", "Banheiro", "Uso inadequado de dispositivo", "Outro"],
+          outro: { valor: "Outro", nome: "careOther", rotulo: "Outra situação assistencial" },
+        },
+      ],
+    },
+
+    /* ---------- ETAPA 5 ---------- */
+    {
+      rotuloCurto: "Medidas preventivas",
+      titulo: "Medidas preventivas após o evento",
+      campos: [
+        {
+          nome: "preventiveMeasures", tipo: "escolha-multipla", rotulo: "Medidas adotadas",
+          opcoes: ["Adequação do ambiente", "Reavaliação de mobilidade/equilíbrio", "Revisão de necessidade de auxílio", "Orientação à equipe", "Ajuste de supervisão", "Encaminhamento para avaliação multiprofissional", "Outra"],
+          outro: { valor: "Outra", nome: "preventiveOther", rotulo: "Outra medida" },
+        },
+        { nome: "measureResponsible", tipo: "texto", rotulo: "Responsável pela medida" },
+        { nome: "reevaluationDate", tipo: "data", rotulo: "Data de reavaliação", largura: "metade" },
+      ],
+    },
+  ],
+
+  /* ---------- ETAPA 6: REVISÃO ---------- */
+  revisao: {
+    rotuloCurto: "Revisão",
+    titulo: "Revise antes de salvar",
+    destaque: "Confira as informações.",
+    texto: "Se precisar corrigir algo, use Editar na seção ou volte às etapas anteriores antes de salvar.",
+    editar: "Editar",
+  },
+
+  textos: {
+    // {atual} e {total} são preenchidos automaticamente
+    contador: "Etapa {atual} de {total}",
+    obrigatorios: "necessário para avançar",
+    // {etapa} é o nome curto da próxima etapa
+    aSeguir: "A seguir: {etapa}",
+    voltar: "Voltar",
+    continuar: "Continuar",
+    para: "para",
+    salvar: "Salvar registro",
+    // {valor} é a resposta que abriu a pergunta
+    porqueRespondeu: "Porque respondeu {valor}",
+    porqueMarcou: "Porque marcou {valor}",
+    ateAqui: "Até aqui",
+    ateAquiVazio: "As respostas aparecem aqui conforme você avança.",
+    paraTestar: "Para testar o protótipo",
+    preencherExemplo: "Preencher com exemplo fictício",
+    limparDados: "Limpar dados deste navegador",
+    confirmarLimpeza: "Clique de novo para confirmar",
+    nota: "Os dados ficam somente no armazenamento local deste navegador.",
+    naoInformado: "Não informado",
+    naoSeAplica: "Não se aplica",
+    erroTexto: "Preencha este campo para continuar.",
+    erroEscolha: "Selecione uma opção para continuar.",
+    salvoChamada: "Registro salvo neste navegador",
+    salvoTitulo: "Notificação registrada",
+    // {id} e {data} são preenchidos automaticamente
+    salvoDetalhe: "Identificador {id} · salvo em {data}",
+    novaNotificacao: "Nova notificação",
+    exportarJson: "Exportar registro (.json)",
+    exportarImpressao: "Versão para impressão",
+    avisoSalvo: "Registro salvo neste navegador.",
+    avisoSemArmazenamento: "Este navegador não permitiu guardar o registro. Ele fica visível só até fechar a página.",
+    avisoLimpo: "Dados apagados deste navegador.",
+    avisoExemplo: "Exemplo fictício preenchido. Confira e avance pelas etapas.",
+    rodape: [
+      "Protótipo acadêmico baseado no Protocolo de Notificação e Registro de Quedas.",
+      "Não realiza avaliação, classificação de risco ou decisão clínica.",
+    ],
+    aviso: "Protótipo acadêmico, não substitui avaliação clínica nem protocolo oficial da instituição.",
+  },
+
+  /* Dados FICTÍCIOS usados pelo botão "Preencher exemplo".
+     Datas aceitam "hoje" ou "hoje+N" (N dias depois). */
+  exemplo: {
+    residentName: "Residente Exemplo (fictício)",
+    eventDate: "hoje",
+    eventTime: "14:30",
+    eventLocation: "Banheiro do quarto 12 (exemplo)",
+    identifiedBy: "Técnica de enfermagem (exemplo)",
+    hasWitness: "Não",
+    mechanism: "Escorregamento",
+    reachedGround: "Sim",
+    activity: "Indo ao banheiro",
+    assistiveDevice: "Andador",
+    eventDescription: "Texto fictício para testar o fluxo do protótipo.",
+    responsiveness: "Preservada",
+    pain: "Sim",
+    painLocation: "Exemplo fictício",
+    apparentInjury: "Sim",
+    injuryTypes: ["Hematoma"],
+    movement: "Limitada",
+    otherSigns: [],
+    conduct: "Texto fictício para testar o fluxo do protótipo.",
+    evaluator: "Enfermeira (exemplo)",
+    environmentalFactors: ["Piso molhado"],
+    residentFactors: ["Alteração do equilíbrio"],
+    careSituation: ["Banheiro", "Sem supervisão"],
+    preventiveMeasures: ["Adequação do ambiente", "Orientação à equipe"],
+    measureResponsible: "Coordenação de enfermagem (exemplo)",
+    reevaluationDate: "hoje+7",
+  },
+};
+/* ======================= FIM DA CONFIGURAÇÃO ======================= */
+
+(function () {
+  "use strict";
+
+  const KEYS = { registro: "quedas-ilpi-registro-v1", config: "quedas-ilpi-config-v1", tema: "quedas-ilpi-tema" };
+  const TIPOS = ["texto", "texto-longo", "data", "hora", "escolha-unica", "escolha-multipla"];
+  const DEFAULT = JSON.parse(JSON.stringify(CONFIG));
+
+  /* ---------- armazenamento local, sempre protegido ---------- */
+  const store = {
+    get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+    del(k) { try { window.localStorage.removeItem(k); return true; } catch (e) { return false; } },
+  };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = (v) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  const fill = (tpl, map) => String(tpl).replace(/\{(\w+)\}/g, (m, k) => (k in map ? map[k] : m));
+
+  /* ---------- configuração ativa ---------- */
+  function validateConfig(c) {
+    const problems = [];
+    if (!c || typeof c !== "object") return ["O conteúdo precisa ser um objeto entre chaves { }."];
+    if (!Array.isArray(c.etapas) || !c.etapas.length) problems.push('"etapas" precisa ser uma lista com pelo menos uma etapa.');
+    const names = new Set();
+    (c.etapas || []).forEach((e, i) => {
+      const where = `Etapa ${i + 1}`;
+      if (!e || typeof e.titulo !== "string") problems.push(`${where}: falta "titulo".`);
+      if (!e || !Array.isArray(e.campos)) { problems.push(`${where}: "campos" precisa ser uma lista.`); return; }
+      e.campos.forEach((f, j) => {
+        const w = `${where}, pergunta ${j + 1}`;
+        if (!f || typeof f.nome !== "string" || !f.nome.trim()) problems.push(`${w}: falta "nome".`);
+        else if (names.has(f.nome)) problems.push(`${w}: o nome "${f.nome}" está repetido.`);
+        else names.add(f.nome);
+        if (!f || !TIPOS.includes(f.tipo)) problems.push(`${w}: "tipo" deve ser um destes: ${TIPOS.join(", ")}.`);
+        if (f && f.tipo && f.tipo.startsWith("escolha") && (!Array.isArray(f.opcoes) || !f.opcoes.length)) problems.push(`${w}: "opcoes" precisa ter ao menos uma opção.`);
+        if (f && f.outro) {
+          if (!f.outro.nome) problems.push(`${w}: "outro" precisa de "nome".`);
+          else if (names.has(f.outro.nome)) problems.push(`${w}: o nome "${f.outro.nome}" está repetido.`);
+          else names.add(f.outro.nome);
+        }
+      });
+    });
+    (c.etapas || []).forEach((e, i) => (e.campos || []).forEach((f) => {
+      if (f && f.mostrarSe && !names.has(f.mostrarSe.campo)) problems.push(`Etapa ${i + 1}: "mostrarSe" aponta para "${f.mostrarSe.campo}", que não existe.`);
+    }));
+    return problems;
+  }
+
+  function mergeConfig(o) {
+    const d = DEFAULT;
+    return {
+      app: { ...d.app, ...(o.app || {}) },
+      conduta: { ...d.conduta, ...(o.conduta || {}) },
+      etapas: o.etapas,
+      revisao: { ...d.revisao, ...(o.revisao || {}) },
+      textos: { ...d.textos, ...(o.textos || {}) },
+      exemplo: o.exemplo || {},
+    };
+  }
+
+  let customActive = false;
+  function loadConfig() {
+    const raw = store.get(KEYS.config);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (!validateConfig(parsed).length) { customActive = true; return mergeConfig(parsed); }
+      } catch (e) { /* ignora configuração corrompida */ }
+    }
+    customActive = false;
+    return mergeConfig(JSON.parse(JSON.stringify(DEFAULT)));
+  }
+
+  let CFG = loadConfig();
+  let FIELDS = [];
+  let currentStep = 0;
+  let lastRecord = null;
+
+  const form = $("#fallForm");
+  const T = () => CFG.textos;
+  const totalSteps = () => CFG.etapas.length + 1;
+  const stepLabels = () => [...CFG.etapas.map((e) => e.rotuloCurto || e.titulo), CFG.revisao.rotuloCurto];
+
+  /* ---------- tema ---------- */
+  function applyStoredTheme() {
+    const t = store.get(KEYS.tema);
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+  }
+  function effectiveTheme() {
+    const attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark" || attr === "light") return attr;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  $("#themeButton").addEventListener("click", () => {
+    const next = effectiveTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    store.set(KEYS.tema, next);
+  });
+
+  /* ---------- aviso rápido ---------- */
+  let toastTimer;
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg;
+    el.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.hidden = true; }, 3800);
+  }
+
+  /* ---------- botões com confirmação em dois cliques ---------- */
+  function confirmable(btn, label, confirmLabel, action) {
+    btn.textContent = label;
+    btn.classList.remove("is-confirming");
+    btn.onclick = () => {
+      if (btn.classList.contains("is-confirming")) {
+        btn.classList.remove("is-confirming");
+        btn.textContent = label;
+        clearTimeout(btn._t);
+        action();
+        return;
+      }
+      btn.classList.add("is-confirming");
+      btn.textContent = confirmLabel;
+      btn._t = setTimeout(() => { btn.classList.remove("is-confirming"); btn.textContent = label; }, 4000);
+    };
+  }
+
+  /* ---------- renderização do formulário a partir da configuração ---------- */
+  const fieldByName = (n) => FIELDS.find((f) => f.nome === n);
+
+  function controlHTML(f) {
+    const t = T();
+    const id = `f-${f.nome}`;
+    const req = f.obrigatorio ? ' <span class="req" aria-hidden="true">*</span>' : "";
+    const half = f.largura === "metade" ? " half" : "";
+    const nested = f.mostrarSe ? " nested" : "";
+    const cond = f.mostrarSe ? ` data-cond="${esc(f.nome)}"` : "";
+    const hint = f.mostrarSe
+      ? `<span class="cond-hint">${esc(fill(t.porqueRespondeu, { valor: "\u0000" })).replace("\u0000", `<b>${esc(f.mostrarSe.valor)}</b>`)}</span>`
+      : "";
+    const err = `<p class="err" id="err-${esc(f.nome)}" hidden></p>`;
+    const reqAttr = f.obrigatorio ? ' aria-required="true"' : "";
+
+    if (f.tipo === "escolha-unica" || f.tipo === "escolha-multipla") {
+      const type = f.tipo === "escolha-unica" ? "radio" : "checkbox";
+      const compact = f.opcoes.length <= 3 && f.opcoes.every((o) => String(o).length <= 12) ? " compact" : "";
+      const opts = f.opcoes.map((o, i) =>
+        `<label class="choice"><input type="${type}" id="${id}-${i}" name="${esc(f.nome)}" value="${esc(o)}"><span>${esc(o)}</span></label>`
+      ).join("");
+      const fs = `<fieldset class="field${half}" data-field="${esc(f.nome)}" aria-describedby="err-${esc(f.nome)}"${reqAttr}>
+        <legend>${esc(f.rotulo)}${req}</legend>
+        <div class="choice-grid${compact}">${opts}</div>${err}</fieldset>`;
+      let html = f.mostrarSe ? `<div class="nested"${cond}>${hint}${fs}</div>` : fs;
+      if (f.outro) {
+        const oh = esc(fill(t.porqueMarcou, { valor: "\u0000" })).replace("\u0000", `<b>${esc(f.outro.valor)}</b>`);
+        html += `<div class="field nested" data-outro="${esc(f.nome)}" hidden>
+          <span class="cond-hint">${oh}</span>
+          <label for="f-${esc(f.outro.nome)}">${esc(f.outro.rotulo || f.outro.valor)}</label>
+          <input type="text" id="f-${esc(f.outro.nome)}" name="${esc(f.outro.nome)}" autocomplete="off"></div>`;
+      }
+      return html;
+    }
+
+    let input;
+    if (f.tipo === "texto-longo") input = `<textarea id="${id}" name="${esc(f.nome)}" rows="${Number(f.linhas) || 4}"${reqAttr} aria-describedby="err-${esc(f.nome)}"></textarea>`;
+    else {
+      const ty = f.tipo === "data" ? "date" : f.tipo === "hora" ? "time" : "text";
+      input = `<input type="${ty}" id="${id}" name="${esc(f.nome)}" autocomplete="off"${reqAttr} aria-describedby="err-${esc(f.nome)}">`;
+    }
+    return `<div class="field${half}${nested}" data-field="${esc(f.nome)}"${cond}>${hint}<label for="${id}">${esc(f.rotulo)}${req}</label>${input}${err}</div>`;
+  }
+
+  function renderStatic() {
+    const a = CFG.app, c = CFG.conduta, t = T();
+    document.title = "Quedas ILPI";
+    $("#brandMark").textContent = a.sigla;
+    $("#brandName").textContent = a.nome;
+    $("#brandSub").textContent = a.instituicao;
+    $("#introEyebrow").textContent = a.chamada;
+    $("#pageTitle").textContent = a.titulo;
+    $("#introCopy").textContent = a.introducao;
+    $("#introMeta").textContent = (a.selos || []).map((s) => fill(s, { etapas: totalSteps() })).join(" · ");
+    const items = (c.itens || []).map((i) => `<li>${esc(i)}</li>`).join("");
+    $("#conductTitle").textContent = c.titulo;
+    $("#conductLead").textContent = c.paragrafo;
+    $("#conductList").innerHTML = items;
+    $("#conductOverlayTitle").textContent = c.titulo;
+    $("#conductOverlayLead").textContent = c.paragrafo;
+    $("#conductOverlayList").innerHTML = items;
+    $("#conductToggle").textContent = c.botao || c.titulo;
+    $("#requiredHint").textContent = t.obrigatorios;
+    $("#soFarTitle").textContent = t.ateAqui;
+    $("#toolsLabel").textContent = t.paraTestar;
+    $("#exampleButton").textContent = t.preencherExemplo;
+    $("#noteText").textContent = t.nota;
+    $("#saveButton").textContent = t.salvar;
+    $("#savedEyebrow").textContent = t.salvoChamada;
+    $("#savedTitle").textContent = t.salvoTitulo;
+    $("#newRecordButton").textContent = t.novaNotificacao;
+    $("#exportJsonButton").textContent = t.exportarJson;
+    $("#exportPrintButton").textContent = t.exportarImpressao;
+    $("#footerLines").innerHTML = (t.rodape || []).map((l) => `<p>${esc(l)}</p>`).join("");
+    $("#footerDisclaimer").textContent = t.aviso;
+    confirmable($("#clearButton"), t.limparDados, t.confirmarLimpeza, clearData);
+    confirmable($("#savedClearButton"), t.limparDados, t.confirmarLimpeza, clearData);
+  }
+
+  function renderForm() {
+    FIELDS = CFG.etapas.flatMap((e) => e.campos);
+    const steps = CFG.etapas.map((e, i) => `
+      <fieldset class="form-step" data-step="${i}" ${i ? "hidden" : ""} style="border:0;margin:0;padding:0;min-width:0">
+        <legend class="sr-only">${esc(e.titulo)}</legend>
+        ${e.ajuda ? `<p class="step-help">${esc(e.ajuda)}</p>` : ""}
+        <div class="form-grid">${e.campos.map(controlHTML).join("")}</div>
+      </fieldset>`).join("");
+    const r = CFG.revisao;
+    const review = `
+      <section class="form-step" data-step="${CFG.etapas.length}" hidden>
+        <div class="review-callout"><strong>${esc(r.destaque)}</strong> ${esc(r.texto)}</div>
+        <div id="reviewContent" class="record-sections"></div>
+      </section>`;
+    $("#stepsHost").innerHTML = steps + review;
+
+    const labels = stepLabels();
+    const list = $("#stepList");
+    list.style.setProperty("--steps", labels.length);
+    list.innerHTML = labels.map((l, i) =>
+      `<li data-indicator="${i}"><button type="button" data-goto="${i}"><span class="bar" aria-hidden="true"></span><span class="lbl">${i + 1} · ${esc(l)}</span><span class="sr-only">${i + 1}. ${esc(l)}</span></button></li>`
+    ).join("");
+    updateConditionals();
+  }
+
+  /* ---------- leitura de valores ---------- */
+  const radioValue = (n) => (form.querySelector(`input[name="${CSS.escape(n)}"]:checked`) || {}).value || "";
+  const checkValues = (n) => $$(`input[name="${CSS.escape(n)}"]:checked`, form).map((i) => i.value);
+  const textValue = (n) => { const el = form.elements.namedItem(n); return el && "value" in el ? String(el.value).trim() : ""; };
+
+  function matches(f, expected) {
+    if (f.tipo === "escolha-unica") return radioValue(f.nome) === expected;
+    if (f.tipo === "escolha-multipla") return checkValues(f.nome).includes(expected);
+    return textValue(f.nome) === expected;
+  }
+  function isVisible(f, seen = new Set()) {
+    if (!f.mostrarSe) return true;
+    if (seen.has(f.nome)) return false;
+    seen.add(f.nome);
+    const parent = fieldByName(f.mostrarSe.campo);
+    if (!parent || !isVisible(parent, seen)) return false;
+    return matches(parent, f.mostrarSe.valor);
+  }
+  function otherVisible(f) {
+    return !!f.outro && isVisible(f) && matches(f, f.outro.valor);
+  }
+
+  function updateConditionals() {
+    FIELDS.forEach((f) => {
+      const wrap = form.querySelector(`[data-cond="${CSS.escape(f.nome)}"]`);
+      if (wrap && f.mostrarSe) {
+        const show = isVisible(f);
+        wrap.hidden = !show;
+        $$("input, textarea", wrap).forEach((c) => { c.disabled = !show; });
+      }
+      if (f.outro) {
+        const o = form.querySelector(`[data-outro="${CSS.escape(f.nome)}"]`);
+        if (o) { const show = otherVisible(f); o.hidden = !show; $$("input", o).forEach((c) => { c.disabled = !show; }); }
+      }
+    });
+  }
+
+  /* ---------- montagem do registro (mesma estrutura do protótipo original) ---------- */
+  function formatDate(v) {
+    if (!v) return "";
+    const [y, m, d] = v.split("-");
+    return d && m && y ? `${d}/${m}/${y}` : v;
+  }
+  function buildRow(f) {
+    const t = T();
+    const row = { label: f.rotulo, value: "" };
+    if (!isVisible(f)) { row.value = t.naoSeAplica; return row; }
+    if (f.tipo === "escolha-unica" || f.tipo === "escolha-multipla") {
+      const selected = f.tipo === "escolha-unica" ? [radioValue(f.nome)].filter(Boolean) : checkValues(f.nome);
+      const detail = f.outro && selected.includes(f.outro.valor) ? textValue(f.outro.nome) : "";
+      row.value = selected.map((x) => (f.outro && x === f.outro.valor && detail ? `${x}: ${detail}` : x)).join(", ");
+      row.options = f.opcoes.slice();
+      row.selected = selected;
+      if (detail) { row.outro = f.outro.valor; row.detail = detail; }
+    } else if (f.tipo === "data") row.value = formatDate(textValue(f.nome));
+    else row.value = textValue(f.nome);
+    if (!row.value) row.value = t.naoInformado;
+    return row;
+  }
+  function collectRecord() {
+    return {
+      id: `RQ-${Date.now()}`,
+      savedAt: new Date().toISOString(),
+      sections: CFG.etapas.map((e) => ({ title: e.titulo, rows: e.campos.map(buildRow) })),
+    };
+  }
+
+  /* Revisão no formato "ficha": todas as opções, marcadas ☒ e não marcadas ☐ */
+  function rowValueHTML(r) {
+    const t = T();
+    if (r.value === t.naoSeAplica) return `<div class="r-value empty">${esc(r.value)}</div>`;
+    if (Array.isArray(r.options) && Array.isArray(r.selected)) {
+      const opts = r.options.map((o) => {
+        const on = r.selected.includes(o);
+        const txt = on && r.outro === o && r.detail ? `${o}: ${r.detail}` : o;
+        return `<span class="opt${on ? " on" : ""}"><span class="box" aria-hidden="true">${on ? "✓" : ""}</span>${esc(txt)}${on ? '<span class="sr-only"> (marcado)</span>' : ""}</span>`;
+      }).join("");
+      return `<div class="r-value"><div class="opts">${opts}</div></div>`;
+    }
+    const empty = r.value === t.naoInformado;
+    const mono = /^\d{2}\/\d{2}\/\d{4}$|^\d{2}:\d{2}$/.test(r.value) ? " mono" : "";
+    return `<div class="r-value${empty ? " empty" : ""}${mono}">${esc(r.value)}</div>`;
+  }
+  function renderSections(record, withEdit) {
+    return record.sections.map((s, i) => `
+      <section class="record-section">
+        <header><span class="sec-num">${i + 1}</span><h3>${esc(s.title)}</h3>${withEdit ? `<button type="button" class="button button-quiet button-small" data-goto="${i}">${esc(CFG.revisao.editar)}</button>` : ""}</header>
+        <div class="record-rows">${s.rows.map((r) => `<div class="r-label">${esc(r.label)}</div>${rowValueHTML(r)}`).join("")}</div>
+      </section>`).join("");
+  }
+
+  /* ---------- "Até aqui": respostas das etapas já concluídas ---------- */
+  function renderSoFar() {
+    const t = T();
+    const rows = [];
+    CFG.etapas.slice(0, currentStep).forEach((e) => e.campos.forEach((f) => {
+      if (rows.length >= 5 || f.tipo === "texto-longo") return;
+      const r = buildRow(f);
+      if (r.value !== t.naoInformado && r.value !== t.naoSeAplica) rows.push(r);
+    }));
+    $("#soFar").innerHTML = rows.length
+      ? `<dl class="so-far">${rows.map((r) => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join("")}</dl>`
+      : `<p class="so-far-empty">${esc(t.ateAquiVazio)}</p>`;
+  }
+
+  /* ---------- validação ---------- */
+  function clearError(name) {
+    const wrap = form.querySelector(`[data-field="${CSS.escape(name)}"]`);
+    if (!wrap) return;
+    wrap.classList.remove("has-error");
+    const e = $(`#err-${CSS.escape(name)}`);
+    if (e) { e.hidden = true; e.textContent = ""; }
+    $$("input, textarea", wrap).forEach((c) => c.removeAttribute("aria-invalid"));
+  }
+  function validateStep(i, { scroll = true } = {}) {
+    const etapa = CFG.etapas[i];
+    if (!etapa) return true;
+    let first = null;
+    etapa.campos.forEach((f) => {
+      clearError(f.nome);
+      if (!f.obrigatorio || !isVisible(f)) return;
+      let ok;
+      if (f.tipo === "escolha-unica") ok = !!radioValue(f.nome);
+      else if (f.tipo === "escolha-multipla") ok = checkValues(f.nome).length > 0;
+      else ok = !!textValue(f.nome);
+      if (!ok) {
+        const wrap = form.querySelector(`[data-field="${CSS.escape(f.nome)}"]`);
+        wrap.classList.add("has-error");
+        const e = $(`#err-${CSS.escape(f.nome)}`);
+        e.textContent = f.tipo.startsWith("escolha") ? T().erroEscolha : T().erroTexto;
+        e.hidden = false;
+        $$("input, textarea", wrap).forEach((c) => c.setAttribute("aria-invalid", "true"));
+        if (!first) first = wrap;
+      }
+    });
+    if (first) {
+      if (scroll) {
+        first.scrollIntoView({ behavior: "smooth", block: "center" });
+        const focusable = first.querySelector("input, textarea");
+        if (focusable) setTimeout(() => focusable.focus({ preventScroll: true }), 250);
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /* ---------- navegação entre etapas ---------- */
+  function setNavButton(btn, base, dest, arrowLeft) {
+    const t = T();
+    btn.innerHTML = arrowLeft
+      ? `<span>← ${esc(base)}</span>`
+      : `<span>${esc(base)}<span class="dest"> ${esc(t.para)} ${esc(dest)}</span> →</span>`;
+  }
+
+  function showStep(index, { focus = true } = {}) {
+    const total = totalSteps();
+    const labels = stepLabels();
+    currentStep = Math.max(0, Math.min(index, total - 1));
+    $$(".form-step", form).forEach((s) => { s.hidden = Number(s.dataset.step) !== currentStep; });
+    $$("#stepList [data-indicator]").forEach((li) => {
+      const i = Number(li.dataset.indicator);
+      li.classList.toggle("is-current", i === currentStep);
+      li.classList.toggle("is-complete", i < currentStep);
+      const b = li.querySelector("button");
+      if (i === currentStep) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.disabled = i > currentStep;
+    });
+    const isReview = currentStep === total - 1;
+    $("#formTitle").textContent = isReview ? CFG.revisao.titulo : CFG.etapas[currentStep].titulo;
+    $("#stepCounter").textContent = fill(T().contador, { atual: currentStep + 1, total });
+    $("#requiredHint").parentElement.hidden = isReview;
+    $("#nextHint").textContent = isReview ? "" : fill(T().aSeguir, { etapa: labels[currentStep + 1] });
+    $("#previousButton").hidden = currentStep === 0;
+    if (currentStep > 0) setNavButton($("#previousButton"), T().voltar, labels[currentStep - 1], true);
+    $("#nextButton").hidden = isReview;
+    if (!isReview) setNavButton($("#nextButton"), T().continuar, labels[currentStep + 1], false);
+    $("#saveButton").hidden = !isReview;
+    if (isReview) $("#reviewContent").innerHTML = renderSections(collectRecord(), true);
+    renderSoFar();
+    if (focus) {
+      $("#wizard").scrollIntoView({ behavior: "smooth", block: "start" });
+      $("#formTitle").focus({ preventScroll: true });
+    }
+  }
+
+  form.addEventListener("click", (e) => {
+    const g = e.target.closest("[data-goto]");
+    if (g) showStep(Number(g.dataset.goto));
+  });
+  $("#stepList").addEventListener("click", (e) => {
+    const g = e.target.closest("[data-goto]");
+    if (g && Number(g.dataset.goto) < currentStep) showStep(Number(g.dataset.goto));
+  });
+  $("#nextButton").addEventListener("click", () => { if (validateStep(currentStep)) showStep(currentStep + 1); });
+  $("#previousButton").addEventListener("click", () => showStep(currentStep - 1));
+  form.addEventListener("change", (e) => { updateConditionals(); if (e.target.name) clearError(e.target.name); });
+  form.addEventListener("input", (e) => { if (e.target.name) clearError(e.target.name); });
+  form.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.tagName === "INPUT" && currentStep < totalSteps() - 1) {
+      e.preventDefault();
+      $("#nextButton").click();
+    }
+  });
+
+  /* ---------- conduta imediata (celular) ---------- */
+  $("#conductToggle").addEventListener("click", () => { $("#conductOverlay").hidden = false; $("#conductClose").focus(); });
+  $("#conductClose").addEventListener("click", () => { $("#conductOverlay").hidden = true; $("#conductToggle").focus(); });
+  $("#conductOverlay").addEventListener("click", (e) => { if (e.target.id === "conductOverlay") $("#conductOverlay").hidden = true; });
+
+  /* ---------- salvar e visualizar ---------- */
+  function readSaved() {
+    if (lastRecord) return lastRecord;
+    const raw = store.get(KEYS.registro);
+    if (!raw) return null;
+    try { const r = JSON.parse(raw); return r && Array.isArray(r.sections) ? r : null; } catch (e) { return null; }
+  }
+  function refreshSavedButton() { $("#viewSavedButton").hidden = !readSaved(); }
+
+  function showSaved(record) {
+    if (!record) return;
+    $("#wizard").hidden = true;
+    $("#savedRecord").hidden = false;
+    $("#savedContent").innerHTML = renderSections(record, false);
+    const d = new Date(record.savedAt);
+    $("#savedMeta").textContent = fill(T().salvoDetalhe, { id: record.id, data: isNaN(d) ? record.savedAt : d.toLocaleString("pt-BR") });
+    $("#savedRecord").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("#savedTitle").focus({ preventScroll: true });
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    for (let i = 0; i < CFG.etapas.length; i++) {
+      if (!validateStep(i, { scroll: false })) { showStep(i, { focus: false }); validateStep(i); return; }
+    }
+    const record = collectRecord();
+    lastRecord = record;
+    const ok = store.set(KEYS.registro, JSON.stringify(record));
+    toast(ok ? T().avisoSalvo : T().avisoSemArmazenamento);
+    refreshSavedButton();
+    showSaved(record);
+  });
+
+  $("#viewSavedButton").addEventListener("click", () => showSaved(readSaved()));
+
+  function startNew() {
+    form.reset();
+    $$(".has-error", form).forEach((w) => clearError(w.dataset.field));
+    updateConditionals();
+    $("#savedRecord").hidden = true;
+    $("#wizard").hidden = false;
+    showStep(0);
+  }
+  $("#newRecordButton").addEventListener("click", startNew);
+
+  function clearData() {
+    store.del(KEYS.registro);
+    lastRecord = null;
+    refreshSavedButton();
+    startNew();
+    toast(T().avisoLimpo);
+  }
+
+  /* ---------- exemplo fictício ---------- */
+  function exampleDate(v) {
+    const m = /^hoje(?:\+(\d+))?$/.exec(String(v));
+    if (!m) return v;
+    const d = new Date();
+    d.setDate(d.getDate() + Number(m[1] || 0));
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  }
+  $("#exampleButton").addEventListener("click", () => {
+    const ex = CFG.exemplo || {};
+    form.reset();
+    Object.entries(ex).forEach(([name, value]) => {
+      const inputs = $$(`[name="${CSS.escape(name)}"]`, form);
+      if (!inputs.length) return;
+      const values = Array.isArray(value) ? value : [value];
+      inputs.forEach((el) => {
+        if (el.type === "radio" || el.type === "checkbox") el.checked = values.includes(el.value);
+        else el.value = el.type === "date" ? exampleDate(value) : value;
+      });
+    });
+    FIELDS.forEach((f) => clearError(f.nome));
+    updateConditionals();
+    showStep(currentStep, { focus: false });
+    toast(T().avisoExemplo);
+  });
+
+  /* ---------- exportação ---------- */
+  let downloadsPromise = null;
+  function getDownloads() {
+    if (!downloadsPromise) {
+      downloadsPromise = window.claude && typeof window.claude.use === "function"
+        ? window.claude.use("downloads").catch(() => null)
+        : Promise.resolve(null);
+    }
+    return downloadsPromise;
+  }
+
+  function openCopyPanel(title, text, content) {
+    $("#exportTitle").textContent = title;
+    $("#exportText").textContent = text;
+    $("#exportArea").value = content;
+    $("#exportOverlay").hidden = false;
+    $("#exportCopy").focus();
+  }
+  $("#exportClose").addEventListener("click", () => { $("#exportOverlay").hidden = true; });
+  $("#exportOverlay").addEventListener("click", (e) => { if (e.target.id === "exportOverlay") $("#exportOverlay").hidden = true; });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#exportOverlay").hidden = true; $("#conductOverlay").hidden = true; } });
+  $("#exportCopy").addEventListener("click", () => {
+    const area = $("#exportArea");
+    const done = () => toast("Copiado.");
+    const fallback = () => { area.focus(); area.select(); toast("Texto selecionado. Use Ctrl+C (ou Copiar no celular)."); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(area.value).then(done, fallback);
+      else fallback();
+    } catch (err) { fallback(); }
+  });
+
+  async function offerFile(filename, content, fallbackTitle) {
+    const dl = await getDownloads();
+    if (!dl) {
+      openCopyPanel(fallbackTitle, "O download não está disponível nesta visualização. Copie o conteúdo abaixo e cole em um arquivo de texto com o nome " + filename + ".", content);
+      return;
+    }
+    try {
+      await dl.save({ filename, data: content });
+      toast("Arquivo enviado para download.");
+    } catch (err) {
+      const code = err && err.code;
+      if (code === "declined") toast("Download cancelado.");
+      else if (code === "rate_limited") toast("Já existe um download aguardando confirmação.");
+      else openCopyPanel(fallbackTitle, "Não foi possível baixar o arquivo aqui. Copie o conteúdo abaixo e cole em um arquivo de texto com o nome " + filename + ".", content);
+    }
+  }
+
+  function recordJSON(r) {
+    return JSON.stringify({
+      aplicativo: CFG.app.nome, aviso: T().aviso, id: r.id, savedAt: r.savedAt,
+      sections: r.sections.map((s) => ({ title: s.title, rows: s.rows.map((x) => ({ label: x.label, value: x.value })) })),
+    }, null, 2);
+  }
+
+  /* Versão para impressão no formato "ficha" */
+  function printableHTML(r) {
+    const t = T();
+    const d = new Date(r.savedAt);
+    const when = isNaN(d) ? r.savedAt : d.toLocaleString("pt-BR");
+    const val = (x) => {
+      if (x.value === t.naoSeAplica) return `<td class="na">${esc(x.value)}</td>`;
+      if (Array.isArray(x.options) && Array.isArray(x.selected)) {
+        return `<td>${x.options.map((o) => {
+          const on = x.selected.includes(o);
+          const txt = on && x.outro === o && x.detail ? `${o}: ${x.detail}` : o;
+          return `<span class="${on ? "on" : ""}">${on ? "☒" : "☐"} ${esc(txt)}</span>`;
+        }).join("")}</td>`;
+      }
+      return `<td${x.value === t.naoInformado ? ' class="na"' : ""}>${esc(x.value)}</td>`;
+    };
+    const sections = r.sections.map((s, i) => `<h2><span>${i + 1}</span>${esc(s.title)}</h2><table>${s.rows.map((x) => `<tr><th>${esc(x.label)}</th>${val(x)}</tr>`).join("")}</table>`).join("");
+    return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(r.id)} — ${esc(CFG.app.nome)}</title>
+<style>body{font-family:"IBM Plex Sans",system-ui,sans-serif;color:#1b2430;max-width:820px;margin:32px auto;padding:0 20px;line-height:1.45;font-size:14px}header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:2px solid #1b2430;padding-bottom:14px;margin-bottom:8px}small{display:block;font:12px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#5a6675}h1{font-size:1.45rem;margin:2px 0 0}.meta{font:12px ui-monospace,monospace;color:#5a6675;text-align:right}h2{font-size:1rem;margin:22px 0 6px;padding-bottom:4px;border-bottom:1.5px solid #1b2430;display:flex;gap:10px}h2 span{font-family:ui-monospace,monospace;color:#1f4e8c}table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid #d3d9df}th{width:32%;color:#5a6675;font-weight:400}td{font-weight:600}td span{display:inline-block;margin:0 16px 2px 0;font-weight:400;color:#5a6675}td span.on{font-weight:700;color:#1b2430}td.na{font-weight:400;font-style:italic;color:#5a6675}.aviso{margin-top:28px;padding-top:10px;border-top:1px solid #d3d9df;font-size:12px;color:#5a6675}button{font:inherit;padding:8px 16px;border-radius:8px;border:1px solid #1f4e8c;background:#1f4e8c;color:#fff;cursor:pointer;margin-bottom:16px}@media print{button{display:none}body{margin:0}}</style></head>
+<body><button onclick="window.print()">Imprimir</button><header><div><small>${esc(CFG.app.instituicao)}</small><h1>${esc(CFG.app.titulo)}</h1></div><div class="meta">${esc(r.id)}<br>salvo em ${esc(when)}</div></header>${sections}<p class="aviso">${esc(t.aviso)}</p></body></html>`;
+  }
+
+  $("#exportJsonButton").addEventListener("click", () => {
+    const r = readSaved(); if (!r) return;
+    offerFile(`${r.id}.json`, recordJSON(r), "Copiar registro (JSON)");
+  });
+  $("#exportPrintButton").addEventListener("click", () => {
+    const r = readSaved(); if (!r) return;
+    offerFile(`${r.id}-impressao.html`, printableHTML(r), "Copiar versão para impressão (HTML)");
+  });
+
+  /* ---------- painel de ajuste de conteúdo ---------- */
+  const editor = $("#configEditor");
+  const status = $("#configStatus");
+  function currentConfigText() {
+    return JSON.stringify({ app: CFG.app, conduta: CFG.conduta, etapas: CFG.etapas, revisao: CFG.revisao, textos: CFG.textos, exemplo: CFG.exemplo }, null, 2);
+  }
+  function syncEditor() {
+    editor.value = currentConfigText();
+    $("#configBadge").hidden = !customActive;
+  }
+  function setStatus(msg, ok) { status.textContent = msg; status.className = "config-status " + (ok ? "ok" : "bad"); }
+
+  function rebuild() {
+    renderStatic();
+    renderForm();
+    $("#savedRecord").hidden = true;
+    $("#wizard").hidden = false;
+    showStep(0, { focus: false });
+    syncEditor();
+  }
+
+  $("#configApply").addEventListener("click", () => {
+    let parsed;
+    try { parsed = JSON.parse(editor.value); }
+    catch (err) {
+      const m = /position (\d+)/.exec(err.message || "");
+      let where = "";
+      if (m) { const line = editor.value.slice(0, Number(m[1])).split("\n").length; where = ` Verifique perto da linha ${line} (vírgulas, aspas e chaves).`; }
+      setStatus("O texto não está no formato esperado." + where, false);
+      return;
+    }
+    const problems = validateConfig(parsed);
+    if (problems.length) { setStatus(problems.slice(0, 4).join(" "), false); return; }
+    CFG = mergeConfig(parsed);
+    const saved = store.set(KEYS.config, JSON.stringify(parsed));
+    customActive = true;
+    rebuild();
+    setStatus(saved ? "Conteúdo aplicado. O formulário foi reiniciado com as mudanças." : "Conteúdo aplicado nesta sessão. O navegador não permitiu guardar para a próxima visita.", true);
+  });
+
+  $("#configDownload").addEventListener("click", () => offerFile("quedas-ilpi-configuracao.json", editor.value, "Copiar configuração"));
+
+  confirmable($("#configReset"), "Restaurar conteúdo original", "Clique de novo para confirmar", () => {
+    store.del(KEYS.config);
+    customActive = false;
+    CFG = mergeConfig(JSON.parse(JSON.stringify(DEFAULT)));
+    rebuild();
+    setStatus("Conteúdo original restaurado.", true);
+  });
+
+  /* ---------- início ---------- */
+  applyStoredTheme();
+  renderStatic();
+  renderForm();
+  showStep(0, { focus: false });
+  syncEditor();
+  refreshSavedButton();
+})();
+</script>
