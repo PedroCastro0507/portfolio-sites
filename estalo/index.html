@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFBF1F">
+<title>Estalo Pastelaria · Curitiba</title>
+<meta name="description" content="Projeto conceito de site para pastelaria: escolha a loja mais perto, veja quem está aberto agora e peça on-line.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#FFBF1F; --amarelo-esc:#E5A400; --verde:#0F4D31; --verde-2:#14643F; --tomate:#E2462C; --tomate-esc:#B8321C;
+  --preto:#16120F; --creme:#FFF6E2; --branco:#FFFFFF; --texto:#1C1712; --suave:#5C5046; --linha:#EADBBE; --zap:#25D366;
+  --raio:26px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+html,body{background:var(--creme);color:var(--texto);font-family:Rubik,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus{outline:none} :focus-visible{outline:3px solid var(--tomate);outline-offset:3px;border-radius:10px}
+.num{font-variant-numeric:tabular-nums}
+.envolve{width:min(1240px,100% - 10vw);margin-inline:auto}
+.slab{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;line-height:.98}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:16px;font-weight:700;font-size:16px;white-space:nowrap;transition:transform .16s ease-out,background .2s}
+.btn:active{transform:scale(.97)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn-verde{background:var(--verde);color:#fff;box-shadow:0 6px 0 #082E1D}
+.btn-verde:hover{background:var(--verde-2)}
+.btn-linha{border:2.5px solid var(--preto);color:var(--preto)}
+.btn-linha:hover{background:rgba(0,0,0,.05)}
+.btn-amarelo{background:var(--amarelo);color:var(--preto);box-shadow:0 5px 0 var(--amarelo-esc)}
+.btn-zap{background:var(--zap);color:#062712}
+.ponto{width:9px;height:9px;border-radius:50%;background:#1FA855;flex:none;animation:pulsa 1.8s infinite}
+.ponto.off{background:#D33;animation:none}
+@keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(31,168,85,.55)}70%{box-shadow:0 0 0 9px rgba(31,168,85,0)}100%{box-shadow:0 0 0 0 rgba(31,168,85,0)}}
+.titulo-sec{margin-bottom:34px}
+.titulo-sec .chapeu{display:inline-block;background:var(--tomate);color:#fff;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:8px;transform:rotate(-2deg)}
+.titulo-sec h2{font-size:clamp(38px,5.2vw,70px);margin-top:16px}
+.titulo-sec p{color:var(--suave);font-size:18px;line-height:1.55;max-width:560px;margin-top:12px}
+.revela{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.revela.visto{opacity:1;transform:none}
+
+/* ---------- logo (criado para o projeto) ---------- */
+.logo{display:inline-flex;align-items:center;gap:10px}
+.logo .selo{position:relative;width:46px;height:46px;border-radius:14px;background:var(--amarelo);display:grid;place-items:center;transform:rotate(-6deg);box-shadow:0 3px 0 var(--amarelo-esc)}
+.logo .selo svg{width:30px;height:30px}
+.logo b{font:400 25px/1 "Alfa Slab One",serif;letter-spacing:.01em}
+.logo small{display:block;font:700 10px Rubik,sans-serif;letter-spacing:.24em;text-transform:uppercase;opacity:.75;margin-top:3px}
+
+/* ---------- cabeçalho ---------- */
+.cab{position:fixed;inset:0 0 auto 0;z-index:40;background:var(--verde);color:#fff;transition:box-shadow .3s}
+.cab.rolou{box-shadow:0 10px 30px -14px rgba(0,0,0,.6)}
+.cab .envolve{display:flex;align-items:center;justify-content:space-between;height:78px;gap:20px}
+.cab nav{display:flex;gap:28px;font-weight:600;font-size:15px;color:#D9EADF}
+.cab nav a:hover{color:var(--amarelo)}
+.cab .btn{height:46px;padding:0 20px;font-size:15px;transition:opacity .25s,transform .25s}
+
+/* ---------- topo ---------- */
+.topo{position:relative;background:var(--amarelo);padding-top:78px;overflow:hidden}
+.topo .palco{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:4vw;min-height:calc(100svh - 78px - 58px);padding:44px 0 64px}
+.topo h1{font-size:clamp(50px,6vw,96px);color:var(--preto)}
+.topo h1 em{font-style:normal;color:var(--tomate);display:inline-block;transform:rotate(-2deg)}
+.topo .linha{margin-top:22px;font-size:19px;line-height:1.5;max-width:470px;color:#3A2E22;font-weight:500}
+.topo .botoes{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.minha{display:inline-flex;align-items:center;gap:10px;margin-top:24px;background:rgba(255,255,255,.75);border:2px solid var(--preto);border-radius:999px;padding:8px 8px 8px 16px;font-weight:600;font-size:14px;max-width:100%}
+.minha > span:nth-child(2){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.minha b{font-weight:800}
+.minha button{background:var(--preto);color:#fff;border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;flex:none}
+.foto-topo{position:relative;justify-self:center;width:min(100%,560px)}
+.foto-topo .moldura{border-radius:32px;overflow:hidden;border:4px solid var(--preto);box-shadow:12px 12px 0 var(--preto);transform:rotate(2.5deg);aspect-ratio:4/5;background:#ddd}
+.foto-topo .moldura img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.foto-topo:hover .moldura img{transform:scale(1.05)}
+.foto-topo .premio{position:absolute;left:-34px;top:38px;width:132px;aspect-ratio:1;border-radius:50%;background:var(--tomate);color:#fff;display:grid;place-items:center;text-align:center;border:4px solid var(--preto);transform:rotate(-12deg);box-shadow:6px 6px 0 var(--preto)}
+.foto-topo .premio b{display:block;font:400 34px/1 "Alfa Slab One",serif}
+.foto-topo .premio span{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1.25;margin-top:4px}
+.foto-topo .preco{position:absolute;right:-18px;bottom:44px;background:var(--branco);border:3px solid var(--preto);border-radius:18px;padding:12px 16px;transform:rotate(-4deg);box-shadow:6px 6px 0 var(--preto)}
+.foto-topo .preco small{display:block;font-size:12px;color:var(--tomate);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.foto-topo .preco b{font:400 26px "Alfa Slab One",serif}
+.fita{background:var(--tomate);color:#fff;white-space:nowrap;overflow:hidden;padding:15px 0;font:400 22px "Alfa Slab One",serif;border-block:4px solid var(--preto)}
+.fita div{display:inline-block;animation:corre 34s linear infinite}
+.fita span{color:var(--amarelo);margin:0 18px}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* ---------- prêmios ---------- */
+.premios{padding:100px 0 30px}
+.trofeus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.trofeu{position:relative;background:var(--branco);border:3px solid var(--preto);border-radius:24px;padding:26px 24px 22px;box-shadow:0 7px 0 var(--preto);overflow:hidden;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.trofeu:nth-child(1){transform:rotate(-1.2deg)} .trofeu:nth-child(3){transform:rotate(1deg)}
+.trofeu:hover{transform:translateY(-6px) rotate(0)}
+.trofeu .ano{font:400 54px/1 "Alfa Slab One",serif;color:var(--tomate)}
+.trofeu h3{font-size:19px;font-weight:800;margin-top:10px;line-height:1.25}
+.trofeu p{color:var(--suave);font-size:14.5px;margin-top:6px;line-height:1.45}
+.trofeu .fita-canto{position:absolute;top:18px;right:-38px;background:var(--amarelo);border-block:2px solid var(--preto);font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:5px 44px;transform:rotate(35deg)}
+
+/* ---------- cardápio ---------- */
+.cardapio{padding:80px 0 100px}
+.abas{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.abas button{height:48px;padding:0 22px;border-radius:14px;font-weight:700;font-size:15px;background:var(--branco);border:2.5px solid var(--preto);box-shadow:0 4px 0 var(--preto);transition:transform .15s,background .2s,color .2s,box-shadow .15s}
+.abas button:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--preto)}
+.abas button[aria-selected="true"]{background:var(--verde);color:var(--amarelo);border-color:var(--verde);box-shadow:0 4px 0 #082E1D}
+.grade-menu{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+.quadro{background:var(--verde);color:#F4EFE3;border-radius:28px;padding:30px 30px 26px;border:4px solid var(--preto);box-shadow:10px 10px 0 var(--preto)}
+.quadro h3{font:400 30px "Alfa Slab One",serif;color:var(--amarelo);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.quadro h3 small{font:600 13px Rubik,sans-serif;color:#A9C8B6}
+.quadro ul{list-style:none;padding:0;margin-top:14px}
+.quadro li{padding:12px 0;border-top:1.5px dashed rgba(255,255,255,.18);animation:entra .4s cubic-bezier(.2,.8,.2,1) both}
+.quadro li:first-child{border-top:0}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.quadro .l1{display:flex;align-items:baseline;gap:10px}
+.quadro .l1 b{font-size:18px;font-weight:700}
+.quadro .l1 i{flex:1;border-bottom:2px dotted rgba(255,255,255,.3);transform:translateY(-4px)}
+.quadro .l1 span{font:400 20px "Alfa Slab One",serif;color:var(--amarelo);white-space:nowrap}
+.quadro .l1 em{font-style:normal;background:var(--tomate);color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase}
+.quadro .d{color:#BFD6C8;font-size:14px;margin-top:4px;line-height:1.45}
+.quadro .pedir-tudo{margin-top:20px;width:100%}
+.lado{display:grid;gap:18px}
+.lado figure{margin:0;position:relative;border-radius:24px;overflow:hidden;border:3px solid var(--preto);box-shadow:0 7px 0 var(--preto);background:#ddd}
+.lado figure:nth-child(2){transform:rotate(1.5deg)}
+.lado img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.lado figure:hover img{transform:scale(1.05)}
+.lado figcaption{position:absolute;left:12px;bottom:12px;background:var(--amarelo);color:var(--preto);font-weight:800;font-size:13px;padding:6px 11px;border-radius:9px;border:2px solid var(--preto)}
+
+/* ---------- lojas ---------- */
+.lojas{background:var(--preto);color:#fff;padding:110px 0}
+.lojas .titulo-sec p{color:#CBBFAF}
+.lojas .acoes-topo{display:flex;gap:12px;flex-wrap:wrap;margin:-8px 0 28px;align-items:center}
+.lojas .acoes-topo .btn{height:48px;font-size:15px}
+.grade-lojas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:start}
+.lista-lojas{display:grid;gap:12px}
+.loja{text-align:left;background:#211B17;border:2px solid #322A25;border-radius:20px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;color:#fff;transition:border-color .2s,transform .2s}
+.loja:hover{transform:translateX(4px);border-color:#5A4D45}
+.loja[aria-pressed="true"]{border-color:var(--amarelo);box-shadow:0 0 0 2px var(--amarelo)}
+.loja .ini{width:52px;height:52px;border-radius:15px;background:var(--amarelo);color:var(--preto);display:grid;place-items:center;font:400 20px "Alfa Slab One",serif}
+.loja h3{font:400 20px "Alfa Slab One",serif}
+.loja .st{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-top:4px;color:#D8CEC2}
+.loja .km{font-weight:800;font-size:13px;color:var(--amarelo);white-space:nowrap}
+.detalhe{position:sticky;top:100px;background:var(--creme);color:var(--texto);border-radius:28px;overflow:hidden;border:3px solid var(--amarelo)}
+.detalhe .mapa{position:relative;height:250px;background:#ddd}
+.detalhe .mapa iframe{position:absolute;inset:0;width:1px;min-width:100%;height:100%;border:0}
+.detalhe .mapa .abrir-mapa{display:none}
+.detalhe .info{padding:22px}
+.detalhe h3{font:400 30px "Alfa Slab One",serif}
+.detalhe .end{color:var(--suave);margin-top:6px;line-height:1.45}
+.detalhe .tipo{display:inline-block;margin-top:10px;background:var(--amarelo);font-weight:700;font-size:13px;padding:4px 10px;border-radius:8px}
+.horas{list-style:none;padding:0;margin-top:14px;font-size:14.5px}
+.horas li{display:flex;justify-content:space-between;padding:8px 10px;border-radius:10px}
+.horas li.hoje{background:#fff;font-weight:700;box-shadow:0 0 0 2px var(--preto) inset}
+.detalhe .acoes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.detalhe .acoes .btn{height:50px;font-size:15px;padding:0 14px}
+
+/* ---------- números ---------- */
+.numeros{padding:90px 0}
+.numeros .grade-n{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.numeros .n{background:var(--branco);border:2.5px solid var(--preto);border-radius:24px;padding:24px;box-shadow:0 6px 0 var(--preto)}
+.numeros .n:nth-child(2){transform:rotate(1.2deg)} .numeros .n:nth-child(3){transform:rotate(-1deg)}
+.numeros .n b{display:block;font:400 clamp(38px,4.2vw,56px)/1 "Alfa Slab One",serif;color:var(--verde)}
+.numeros .n span{display:block;margin-top:10px;font-weight:600;color:var(--suave)}
+
+/* ---------- fechamento ---------- */
+.fome{background:var(--verde);color:#fff;position:relative;overflow:hidden;padding:100px 0 110px;border-top:4px solid var(--preto)}
+.fome .grande{font-size:clamp(84px,15vw,220px);line-height:.85;color:var(--amarelo);text-shadow:6px 6px 0 #082E1D}
+.fome p{font-size:20px;font-weight:500;max-width:460px;line-height:1.45;margin-top:22px;color:#DCEBE2}
+.fome .btn{margin-top:28px;height:62px;font-size:18px;padding:0 32px}
+.fome .foto-solta{position:absolute;right:5vw;top:50%;width:min(36vw,460px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:5px solid var(--preto);transform:translateY(-50%) rotate(-8deg);box-shadow:12px 12px 0 #082E1D}
+.fome .foto-solta img{width:100%;height:100%;object-fit:cover}
+.rodape{background:var(--preto);color:#A89A8C;font-size:13.5px;padding:34px 0}
+.rodape .envolve{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.rodape .logo{color:#fff}
+.rodape a{color:#E9DFCF;font-weight:700}
+
+/* aviso de demonstração */
+.toast{position:fixed;left:50%;bottom:28px;z-index:70;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--preto);color:#fff;padding:13px 18px;border-radius:14px;font-weight:600;font-size:14.5px;box-shadow:0 18px 40px -12px rgba(0,0,0,.5);transition:opacity .25s,transform .25s;max-width:calc(100% - 32px);text-align:center}
+.toast.ver{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- celular ---------- */
+.ilha{display:none}
+@media (max-width:980px){.grade-lojas,.grade-menu{grid-template-columns:minmax(0,1fr)}.detalhe{position:static}.numeros .grade-n{grid-template-columns:repeat(2,minmax(0,1fr))}.trofeus{grid-template-columns:minmax(0,1fr)}.lado{grid-template-columns:1fr 1fr}.lado img{aspect-ratio:1}}
+@media (max-width:820px){
+  .envolve{width:calc(100% - 40px)}
+  .cab nav{display:none}.cab .envolve{height:66px}
+  .cab .btn{height:42px;padding:0 14px;font-size:14px}
+  body.ilha-on .cab .btn{opacity:0;transform:scale(.85);pointer-events:none}
+  .topo{padding-top:66px}
+  .topo .palco{grid-template-columns:minmax(0,1fr);gap:34px;padding:34px 0 52px;min-height:0}
+  .topo h1{font-size:clamp(44px,12.4vw,62px)}
+  .topo .linha{font-size:17px}
+  .topo .botoes .btn{flex:1}
+  .minha{display:flex}
+  .foto-topo{width:calc(100% - 30px)}
+  .foto-topo .moldura{aspect-ratio:1;box-shadow:8px 8px 0 var(--preto)}
+  .foto-topo .premio{width:104px;left:-16px;top:-18px}
+  .foto-topo .premio b{font-size:26px}.foto-topo .premio span{font-size:10px}
+  .foto-topo .preco{right:-10px;bottom:-16px}
+  .fita{font-size:17px;padding:12px 0}
+  .titulo-sec p{display:none}
+  .premios{padding:76px 0 10px}
+  .trofeu .ano{font-size:44px}
+  .cardapio{padding:64px 0 80px}
+  .abas{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .abas button{width:100%;padding:0 10px}
+  .quadro{padding:22px 18px 20px;box-shadow:6px 6px 0 var(--preto);border-radius:22px}
+  .quadro .l1 b{font-size:16px}.quadro .l1 span{font-size:17px}
+  .lojas{padding:80px 0}
+  .loja{padding:12px 14px;gap:12px}.loja .ini{width:44px;height:44px;font-size:16px}.loja h3{font-size:17px}
+  .detalhe .mapa iframe{pointer-events:none}.detalhe .mapa .abrir-mapa{display:block;position:absolute;inset:0}
+  .lojas .acoes-topo .btn{flex:1}
+  .numeros{padding:70px 0}.numeros .n{padding:18px}
+  .fome{padding:80px 0 330px}.fome .foto-solta{width:70vw;right:auto;left:15vw;top:auto;bottom:40px;transform:rotate(-8deg)}.fome .btn{width:100%}
+  .rodape{padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
+  .ilha{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:45;align-items:center;gap:8px;padding:8px;border-radius:999px;background:rgba(255,246,226,.88);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:2px solid var(--preto);box-shadow:0 18px 40px -12px rgba(0,0,0,.5);transform:translateY(150%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  body.ilha-on .ilha{transform:none}
+  .ilha .q{flex:1;min-width:0;padding-left:12px;text-align:left}
+  .ilha .q b{display:block;font-size:14px}
+  .ilha .q small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--suave);white-space:nowrap;overflow:hidden}
+  .ilha .btn{height:48px;padding:0 18px;font-size:15px;box-shadow:none}
+  .ilha .zap{width:48px;height:48px;border-radius:50%;background:var(--zap);display:grid;place-items:center;flex:none}
+  .ilha .zap svg{width:24px;height:24px;color:#062712}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></symbol>
+  <!-- marca: um pastel com as dobrinhas da borda -->
+  <symbol id="i-marca" viewBox="0 0 40 40"><rect x="5" y="11" width="30" height="18" rx="5" fill="#fff" stroke="#16120F" stroke-width="2.6"/><path d="M9 11v-2M13 11V9M17 11V9M21 11V9M25 11V9M29 11V9M9 31v-2M13 31v-2M17 31v-2M21 31v-2M25 31v-2M29 31v-2" stroke="#16120F" stroke-width="2.4" stroke-linecap="round"/><circle cx="14" cy="18" r="1.6" fill="#E2462C"/><circle cx="22" cy="22" r="1.6" fill="#E2462C"/><circle cx="27" cy="17" r="1.3" fill="#E2462C"/></symbol>
+</svg>
+
+<header class="cab" id="cab">
+  <div class="envolve">
+    <a href="#topo" class="logo" aria-label="Estalo Pastelaria, início"><span class="selo"><svg><use href="#i-marca"/></svg></span><span><b>ESTALO</b><small>Pastelaria</small></span></a>
+    <nav aria-label="Menu"><a href="#premios">Prêmios</a><a href="#cardapio">Cardápio</a><a href="#lojas">Lojas</a></nav>
+    <a class="btn btn-amarelo" data-pedir href="#">Pedir agora</a>
+  </div>
+</header>
+
+<main>
+<section class="topo" id="topo">
+  <div class="envolve palco">
+    <div>
+      <h1 class="slab">Pastel que <em>estala</em> na primeira mordida.</h1>
+      <p class="linha">Massa fininha, recheio farto e o óleo sempre limpo. São 3 lojas em Curitiba: escolha a sua e peça direto.</p>
+      <div class="botoes"><a class="btn btn-verde" data-pedir href="#">Pedir agora</a><a class="btn btn-linha" href="#cardapio">Ver o cardápio</a></div>
+      <div class="minha"><span class="ponto" data-pt></span><span>Sua loja: <b data-nome>—</b> · <span data-st>…</span></span><button data-trocar>Trocar</button></div>
+    </div>
+    <div class="foto-topo">
+      <div class="moldura"><img src="https://images.pexels.com/photos/15010282/pexels-photo-15010282/free-photo-of-lanche-petisco-aperitivo-comida-rapida.jpeg?auto=compress&cs=tinysrgb&w=1100" alt="Pastéis fritos empilhados"></div>
+      <a class="premio" href="#premios"><span><b>3×</b><span>premiada<br>na cidade</span></span></a>
+      <div class="preco"><small>Pastel de carne</small><b class="num">R$ 16,90</b></div>
+    </div>
+  </div>
+  <div class="fita" aria-hidden="true"><div>CARNE<span>✦</span>QUEIJO<span>✦</span>PIZZA<span>✦</span>FRANGO COM CATUPIRY<span>✦</span>PALMITO<span>✦</span>CARNE SECA<span>✦</span>BANANA COM CANELA<span>✦</span>CARNE<span>✦</span>QUEIJO<span>✦</span>PIZZA<span>✦</span>FRANGO COM CATUPIRY<span>✦</span>PALMITO<span>✦</span>CARNE SECA<span>✦</span>BANANA COM CANELA<span>✦</span></div></div>
+</section>
+
+<section class="premios" id="premios">
+  <div class="envolve">
+    <div class="titulo-sec revela"><span class="chapeu">Premiada</span><h2 class="slab">A cidade já votou.</h2>
+      <p>Prêmio de verdade conta mais que qualquer propaganda. Ele fica aqui, no alto do site, e não escondido num carrossel.</p></div>
+    <div class="trofeus revela">
+      <article class="trofeu"><span class="fita-canto">Vencedor</span><div class="ano num">2025</div><h3>Melhor pastel · voto popular</h3><p>Guia Sabores de Curitiba</p></article>
+      <article class="trofeu"><span class="fita-canto">Vencedor</span><div class="ano num">2024</div><h3>Novidade do ano</h3><p>Guia Sabores de Curitiba</p></article>
+      <article class="trofeu"><span class="fita-canto">Finalista</span><div class="ano num">2023</div><h3>Melhor lanche de rua</h3><p>Festival Feira Boa</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="cardapio" id="cardapio">
+  <div class="envolve">
+    <div class="titulo-sec revela"><span class="chapeu">Cardápio</span><h2 class="slab">Qual vai ser hoje?</h2>
+      <p>Os mais pedidos de cada categoria. O cardápio completo, com bebidas e combos, abre quando você toca em pedir.</p></div>
+    <div class="abas" role="tablist" id="abas"></div>
+    <div class="grade-menu">
+      <div class="quadro" id="quadro"></div>
+      <div class="lado revela">
+        <figure><img src="https://images.pexels.com/photos/37824357/pexels-photo-37824357/free-photo-of-pasteis-de-carne-brasileiros-no-buffet-de-festa.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Pastéis de carne numa cesta" loading="lazy"><figcaption>O de carne é o campeão</figcaption></figure>
+        <figure><img src="https://images.pexels.com/photos/24962986/pexels-photo-24962986/free-photo-of-frito-oleo-petroleo-pastel.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Pastéis fritando no óleo" loading="lazy"><figcaption>Frito na hora do pedido</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lojas" id="lojas">
+  <div class="envolve">
+    <div class="titulo-sec revela"><span class="chapeu" style="background:var(--amarelo);color:var(--preto)">3 lojas</span><h2 class="slab">Tem uma perto de você.</h2>
+      <p>Escolha a sua loja: o botão de pedir, o WhatsApp e o horário passam a ser dela.</p></div>
+    <div class="acoes-topo"><button class="btn btn-amarelo" id="perto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Achar a mais perto de mim</button></div>
+    <div class="grade-lojas">
+      <div class="lista-lojas" id="lista-lojas"></div>
+      <aside class="detalhe" id="detalhe" aria-live="polite"></aside>
+    </div>
+  </div>
+</section>
+
+<section class="numeros">
+  <div class="envolve">
+    <div class="grade-n revela">
+      <div class="n"><b class="num">3</b><span>lojas em Curitiba</span></div>
+      <div class="n"><b class="num">40+</b><span>sabores salgados e doces</span></div>
+      <div class="n"><b class="num">3×</b><span>premiada pela cidade</span></div>
+      <div class="n"><b class="num">2009</b><span>o ano da primeira fritura</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="fome">
+  <div class="foto-solta"><img src="https://images.pexels.com/photos/30893317/pexels-photo-30893317/free-photo-of-pasteis-de-rua-crocantes-fritos-em-oleo.jpeg?auto=compress&cs=tinysrgb&w=900" alt="" loading="lazy"></div>
+  <div class="envolve" style="position:relative">
+    <div class="slab grande">Bateu<br>fome?</div>
+    <p>Escolhe o sabor, a loja mais perto e pronto: o pastel sai quentinho.</p>
+    <a class="btn btn-amarelo" data-pedir href="#">Pedir agora</a>
+  </div>
+</section>
+</main>
+
+<footer class="rodape">
+  <div class="envolve">
+    <span class="logo"><span class="selo"><svg><use href="#i-marca"/></svg></span><span><b>ESTALO</b><small>Pastelaria</small></span></span>
+    <span>Projeto conceito: nome, lojas, preços, prêmios e contatos são fictícios. Fotos: Pexels.</span>
+    <a href="../">← Ver outros sites do portfólio</a>
+  </div>
+</footer>
+
+<div class="ilha" id="ilha">
+  <button class="q" data-trocar><b data-nome>—</b><small><span class="ponto" data-pt></span><span data-st>…</span></small></button>
+  <a class="btn btn-verde" data-pedir href="#">Pedir</a>
+  <a class="zap" data-zap href="#" aria-label="WhatsApp da loja"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-zap"/></svg></a>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+// Lojas fictícias (ruas reais de Curitiba só para o mapa). Coordenadas aproximadas.
+const LOJAS = [
+  {id:'batel', nome:'Batel', end:'Av. do Batel, 1500 · Batel, Curitiba', tipo:'Salão, balcão e delivery', lat:-25.4430, lng:-49.2905,
+   h:{0:[17.5,23],1:[11,23],2:[11,23],3:[11,23],4:[11,23],5:[11,23.5],6:[11,23.5]}},
+  {id:'portao', nome:'Portão', end:'Av. República Argentina, 3000 · Portão, Curitiba', tipo:'Salão, balcão e delivery', lat:-25.4740, lng:-49.2930,
+   h:{0:[17.5,23],1:[11,23],2:[11,23],3:[11,23],4:[11,23],5:[11,23.5],6:[11,23.5]}},
+  {id:'boqueirao', nome:'Boqueirão', end:'Av. Marechal Floriano Peixoto, 7000 · Boqueirão, Curitiba', tipo:'Somente delivery', lat:-25.5010, lng:-49.2370,
+   h:{0:null,1:[18,23],2:[18,23],3:[18,23],4:[18,23],5:[18,23],6:[18,23]}},
+];
+const CARDAPIO = [
+  {cat:'Clássicos', itens:[
+    {n:'Carne', d:'Carne moída temperada com cebola e cheiro-verde.', p:16.9, tag:'Campeão'},
+    {n:'Queijo', d:'Muçarela que puxa até a última mordida.', p:16.9},
+    {n:'Pizza', d:'Queijo, presunto, tomate e orégano.', p:18.9},
+    {n:'Frango com catupiry', d:'Frango desfiado e catupiry de verdade.', p:18.9},
+    {n:'Palmito', d:'Palmito picado com molho branco leve.', p:17.9},
+  ]},
+  {cat:'Especiais', itens:[
+    {n:'Carne com ovo e azeitona', d:'O de feira, do jeito clássico.', p:19.9},
+    {n:'Calabresa com cheddar', d:'Calabresa acebolada e cheddar cremoso.', p:21.9, tag:'Novo'},
+    {n:'Quatro queijos', d:'Muçarela, provolone, parmesão e catupiry.', p:22.9},
+    {n:'Bacalhau', d:'Lascas de bacalhau, batata e azeitona.', p:29.9},
+  ]},
+  {cat:'Da casa', itens:[
+    {n:'Carne seca com abóbora', d:'Carne seca desfiada e purê de abóbora.', p:27.9, tag:'Premiado'},
+    {n:'Costela no bafo', d:'Costela desfiada com muçarela.', p:27.9},
+    {n:'Camarão com catupiry', d:'Camarão refogado e catupiry.', p:32.9},
+  ]},
+  {cat:'Doces', itens:[
+    {n:'Banana com canela', d:'Banana, açúcar e canela por cima.', p:14.9},
+    {n:'Romeu e Julieta', d:'Goiabada derretida e queijo.', p:15.9},
+    {n:'Chocolate com morango', d:'Chocolate ao leite e morango fresco.', p:17.9},
+  ]},
+];
+const DIAS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const hm = h => `${Math.floor(h)}h${h%1 ? String(Math.round(h%1*60)).padStart(2,'0') : ''}`;
+const real = v => 'R$ ' + v.toFixed(2).replace('.',',');
+let aba = CARDAPIO[0].cat, dist = {};
+let atual = (() => { try { return localStorage.getItem('estalo-loja') || 'batel'; } catch { return 'batel'; } })();
+const loja = () => LOJAS.find(l => l.id === atual) || LOJAS[0];
+
+function agora(){
+  const p = new Intl.DateTimeFormat('en-US',{timeZone:'America/Sao_Paulo',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date());
+  const g = t => p.find(x => x.type === t).value;
+  return {d:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday')), h:(+g('hour')%24) + (+g('minute'))/60};
+}
+function status(l){
+  const {d,h} = agora(), hoje = l.h[d];
+  if(hoje && h >= hoje[0] && h < hoje[1]) return [true, `Aberta · fecha às ${hm(hoje[1])}`];
+  if(hoje && h < hoje[0]) return [false, `Fechada · abre hoje às ${hm(hoje[0])}`];
+  for(let i=1;i<=7;i++){ const n=(d+i)%7; if(l.h[n]) return [false, `Fechada · abre ${i===1?'amanhã':DIAS[n].toLowerCase()} às ${hm(l.h[n][0])}`]; }
+}
+const km = (a,b,c,d) => { const r=x=>x*Math.PI/180, x=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2; return 12742*Math.asin(Math.sqrt(x)); };
+const toast = t => { const e = document.getElementById('toast'); e.textContent = t; e.classList.add('ver'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('ver'), 3200); };
+
+function pintarStatus(){
+  const [ab, tx] = status(loja());
+  document.querySelectorAll('[data-nome]').forEach(e => e.textContent = loja().nome);
+  document.querySelectorAll('[data-st]').forEach(e => e.textContent = tx);
+  document.querySelectorAll('[data-pt]').forEach(e => e.classList.toggle('off', !ab));
+}
+function pintarLojas(){
+  const l = loja(), d = agora().d;
+  const ordem = [...LOJAS].sort((a,b) => (dist[a.id] ?? 0) - (dist[b.id] ?? 0));
+  document.getElementById('lista-lojas').innerHTML = ordem.map(x => { const [o, t] = status(x);
+    return `<button class="loja" aria-pressed="${x.id===atual}" data-loja="${x.id}"><span class="ini">${x.nome.slice(0,2).toUpperCase()}</span>
+      <span><h3>${x.nome}</h3><span class="st"><span class="ponto ${o?'':'off'}"></span>${t}</span></span>
+      <span class="km num">${dist[x.id]!=null ? (dist[x.id]<1?'< 1':dist[x.id].toFixed(1).replace('.',',')) + ' km' : ''}</span></button>`; }).join('');
+  const q = encodeURIComponent(l.end);
+  document.getElementById('detalhe').innerHTML = `
+    <div class="mapa"><iframe title="Mapa da loja ${l.nome}" loading="lazy" src="https://www.google.com/maps?q=${q}&z=15&hl=pt-BR&output=embed"></iframe>
+      <a class="abrir-mapa" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener" aria-label="Abrir no Google Maps"></a></div>
+    <div class="info"><h3>${l.nome}</h3><p class="end">${l.end}</p><span class="tipo">${l.tipo}</span>
+      <ul class="horas">${[1,2,3,4,5,6,0].map(i => `<li class="${i===d?'hoje':''}"><span>${DIAS[i]}${i===d?' · hoje':''}</span><span class="num">${l.h[i] ? hm(l.h[i][0])+' às '+hm(l.h[i][1]) : 'Fechada'}</span></li>`).join('')}</ul>
+      <div class="acoes"><a class="btn btn-verde" data-pedir href="#">Pedir on-line</a><a class="btn btn-zap" data-zap href="#"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-zap"/></svg>WhatsApp</a></div></div>`;
+  pintarStatus();
+}
+function escolher(id, rolar){
+  atual = id; try { localStorage.setItem('estalo-loja', id); } catch {}
+  pintarLojas();
+  if(rolar && innerWidth <= 980) document.getElementById('detalhe').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function pintarCardapio(){
+  document.getElementById('abas').innerHTML = CARDAPIO.map(c => `<button role="tab" aria-selected="${c.cat===aba}" data-aba="${c.cat}">${c.cat}</button>`).join('');
+  const c = CARDAPIO.find(c => c.cat === aba);
+  document.getElementById('quadro').innerHTML = `<h3>${c.cat}<small>${c.itens.length} sabores</small></h3>
+    <ul>${c.itens.map((i,k) => `<li style="animation-delay:${k*.04}s"><div class="l1"><b>${i.n}</b>${i.tag?`<em>${i.tag}</em>`:''}<i></i><span class="num">${real(i.p)}</span></div><div class="d">${i.d}</div></li>`).join('')}</ul>
+    <a class="btn btn-amarelo pedir-tudo" data-pedir href="#">Pedir na loja ${loja().nome}</a>`;
+}
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-aba]'); if(a){ aba = a.dataset.aba; pintarCardapio(); return; }
+  const l = e.target.closest('[data-loja]'); if(l){ escolher(l.dataset.loja, true); pintarCardapio(); return; }
+  if(e.target.closest('[data-trocar]')){ e.preventDefault(); document.getElementById('lojas').scrollIntoView({behavior:'smooth'}); return; }
+  if(e.target.closest('[data-pedir]')){ e.preventDefault(); toast(`No site de verdade, isto abre o pedido on-line da loja ${loja().nome}.`); return; }
+  if(e.target.closest('[data-zap]')){ e.preventDefault(); toast(`No site de verdade, isto abre o WhatsApp da loja ${loja().nome} com a mensagem pronta.`); }
+});
+document.getElementById('perto').onclick = () => {
+  const b = document.getElementById('perto'), txt = b.innerHTML;
+  if(!navigator.geolocation){ toast('Seu navegador não informa a localização.'); return; }
+  b.textContent = 'Procurando…';
+  navigator.geolocation.getCurrentPosition(p => {
+    LOJAS.forEach(l => dist[l.id] = km(p.coords.latitude, p.coords.longitude, l.lat, l.lng));
+    b.innerHTML = txt; escolher([...LOJAS].sort((a,b) => dist[a.id]-dist[b.id])[0].id, true); pintarCardapio();
+  }, () => { b.innerHTML = txt; toast('Não deu para ver sua localização. Escolha a loja na lista.'); }, {timeout:8000, maximumAge:600000});
+};
+const cab = document.getElementById('cab');
+const aoRolar = () => { cab.classList.toggle('rolou', scrollY > 10); document.body.classList.toggle('ilha-on', scrollY > 450); };
+addEventListener('scroll', aoRolar, {passive:true}); aoRolar();
+const obs = new IntersectionObserver(es => es.forEach(x => { if(x.isIntersecting){ x.target.classList.add('visto'); obs.unobserve(x.target); } }), {threshold:.12});
+document.querySelectorAll('.revela').forEach(el => obs.observe(el));
+pintarCardapio(); pintarLojas(); setInterval(pintarStatus, 60000);
+})();
+</script>
+</body>
+</html>
