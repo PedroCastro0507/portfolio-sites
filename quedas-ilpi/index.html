@@ -169,9 +169,9 @@ p { margin: 0; }
 .rail-card h2 { font-family: var(--font-body); font-size: 1rem; font-weight: 700; }
 .rail-card.conduct { background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold-ink); font-size: 0.92rem; }
 .rail-card.conduct ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-.so-far { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; font-size: 0.9rem; }
+.so-far { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 6px 12px; font-size: 0.9rem; }
 .so-far dt { color: var(--muted); }
-.so-far dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.so-far dd { margin: 0; font-weight: 700; overflow-wrap: break-word; }
 .so-far-empty { color: var(--muted); font-size: 0.9rem; }
 .rail-tools { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 6px 0; }
 .rail-tools .label { color: var(--muted); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
@@ -464,7 +464,7 @@ const CONFIG = {
     chamada: "Protocolo institucional",
     titulo: "Notificação de queda ou perda de equilíbrio",
     introducao:
-      "Registre o evento, a avaliação inicial, os fatores possivelmente associados e as medidas preventivas. O formulário segue exclusivamente os campos previstos no protocolo fornecido.",
+      "Registre o evento, a avaliação inicial, os fatores possivelmente associados e as medidas preventivas. O formulário segue os campos do protocolo fornecido, com três complementos sugeridos no teste com usuários: local por cômodo, quedas anteriores e medicações recentes.",
     // {etapas} é trocado pelo número total de etapas
     selos: ["{etapas} etapas", "Salvo neste navegador"],
   },
@@ -494,7 +494,12 @@ const CONFIG = {
         { nome: "residentName", tipo: "texto", rotulo: "Nome do residente", obrigatorio: true },
         { nome: "eventDate", tipo: "data", rotulo: "Data", obrigatorio: true, largura: "metade" },
         { nome: "eventTime", tipo: "hora", rotulo: "Horário", obrigatorio: true, largura: "metade" },
-        { nome: "eventLocation", tipo: "texto", rotulo: "Local do evento", obrigatorio: true },
+        {
+          nome: "eventLocation", tipo: "escolha-unica", rotulo: "Local do evento", obrigatorio: true,
+          opcoes: ["Quarto", "Banheiro", "Corredor", "Refeitório", "Cozinha", "Sala de convivência", "Área externa/jardim", "Escada", "Outro"],
+          outro: { valor: "Outro", nome: "eventLocationOther", rotulo: "Outro local" },
+        },
+        { nome: "eventLocationDetail", tipo: "texto", rotulo: "Detalhe do local (ex.: número do quarto)" },
         { nome: "identifiedBy", tipo: "texto", rotulo: "Profissional que identificou", obrigatorio: true },
         { nome: "hasWitness", tipo: "escolha-unica", rotulo: "Havia testemunha?", obrigatorio: true, opcoes: ["Sim", "Não"] },
         { nome: "witnessName", tipo: "texto", rotulo: "Quem?", mostrarSe: { campo: "hasWitness", valor: "Sim" } },
@@ -576,6 +581,15 @@ const CONFIG = {
           opcoes: ["Sem supervisão", "Transferência", "Banheiro", "Uso inadequado de dispositivo", "Outro"],
           outro: { valor: "Outro", nome: "careOther", rotulo: "Outra situação assistencial" },
         },
+        {
+          nome: "previousFalls", tipo: "escolha-unica", rotulo: "Quedas anteriores (últimos 60 dias)", obrigatorio: true,
+          opcoes: ["Nenhuma", "Sim, nos últimos 30 dias", "Sim, entre 31 e 60 dias", "Não se sabe"],
+        },
+        {
+          nome: "recentMedication", tipo: "escolha-unica", rotulo: "Início, troca ou ajuste de medicação recente?", obrigatorio: true,
+          opcoes: ["Não", "Sim", "Não se sabe"],
+        },
+        { nome: "recentMedicationText", tipo: "texto", rotulo: "Quais medicações?", mostrarSe: { campo: "recentMedication", valor: "Sim" } },
       ],
     },
 
@@ -652,7 +666,8 @@ const CONFIG = {
     residentName: "Residente Exemplo (fictício)",
     eventDate: "hoje",
     eventTime: "14:30",
-    eventLocation: "Banheiro do quarto 12 (exemplo)",
+    eventLocation: "Banheiro",
+    eventLocationDetail: "Quarto 12 (exemplo)",
     identifiedBy: "Técnica de enfermagem (exemplo)",
     hasWitness: "Não",
     mechanism: "Escorregamento",
@@ -672,6 +687,9 @@ const CONFIG = {
     environmentalFactors: ["Piso molhado"],
     residentFactors: ["Alteração do equilíbrio"],
     careSituation: ["Banheiro", "Sem supervisão"],
+    previousFalls: "Sim, nos últimos 30 dias",
+    recentMedication: "Sim",
+    recentMedicationText: "Exemplo fictício",
     preventiveMeasures: ["Adequação do ambiente", "Orientação à equipe"],
     measureResponsible: "Coordenação de enfermagem (exemplo)",
     reevaluationDate: "hoje+7",
@@ -682,7 +700,7 @@ const CONFIG = {
 (function () {
   "use strict";
 
-  const KEYS = { registro: "quedas-ilpi-registro-v1", config: "quedas-ilpi-config-v1", tema: "quedas-ilpi-tema" };
+  const KEYS = { registro: "quedas-ilpi-registro-v2", config: "quedas-ilpi-config-v2", tema: "quedas-ilpi-tema" };
   const TIPOS = ["texto", "texto-longo", "data", "hora", "escolha-unica", "escolha-multipla"];
   const DEFAULT = JSON.parse(JSON.stringify(CONFIG));
 
