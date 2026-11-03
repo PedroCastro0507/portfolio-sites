@@ -169,9 +169,10 @@ p { margin: 0; }
 .rail-card h2 { font-family: var(--font-body); font-size: 1rem; font-weight: 700; }
 .rail-card.conduct { background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold-ink); font-size: 0.92rem; }
 .rail-card.conduct ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-.so-far { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 6px 12px; font-size: 0.9rem; }
-.so-far dt { color: var(--muted); }
-.so-far dd { margin: 0; font-weight: 700; overflow-wrap: break-word; }
+.so-far { margin: 0; display: flex; flex-direction: column; font-size: 0.9rem; }
+.so-far dt { color: var(--muted); font-size: 0.8rem; margin-top: 10px; }
+.so-far dt:first-child { margin-top: 0; }
+.so-far dd { margin: 2px 0 0; font-weight: 700; overflow-wrap: break-word; line-height: 1.35; }
 .so-far-empty { color: var(--muted); font-size: 0.9rem; }
 .rail-tools { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 6px 0; }
 .rail-tools .label { color: var(--muted); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
