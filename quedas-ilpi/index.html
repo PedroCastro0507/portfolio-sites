@@ -4,7 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Quedas ILPI</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Protótipo acadêmico para notificação e registro de quedas em ILPI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1203,14 +1202,8 @@ const CONFIG = {
   });
 
   /* ---------- exportação ---------- */
-  let downloadsPromise = null;
   function getDownloads() {
-    if (!downloadsPromise) {
-      downloadsPromise = window.claude && typeof window.claude.use === "function"
-        ? window.claude.use("downloads").catch(() => null)
-        : Promise.resolve(null);
-    }
-    return downloadsPromise;
+    return Promise.resolve(null);
   }
 
   function openCopyPanel(title, text, content) {
