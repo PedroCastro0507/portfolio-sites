@@ -201,6 +201,17 @@ p { margin: 0; }
 .saved-heading h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .saved-meta { color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
 .saved-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.saved-list { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.saved-list h3 { font-size: 1.05rem; margin: 0 0 4px; }
+.saved-list > p { color: var(--muted); font-size: 0.9rem; margin: 0 0 12px; }
+.saved-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.saved-list button { width: 100%; min-height: 56px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: center; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
+.saved-list button:hover { border-color: var(--accent); }
+.saved-list button[aria-current="true"] { border-color: var(--accent); background: var(--accent-soft, var(--surface)); }
+.saved-list .who { font-weight: 700; overflow-wrap: anywhere; }
+.saved-list .what { grid-column: 1; color: var(--muted); font-size: 0.86rem; }
+.saved-list .when { grid-row: 1 / span 2; grid-column: 2; color: var(--muted); font-size: 0.82rem; text-align: right; }
+@media print { header, footer, .saved-actions, .saved-list, #wizard, .teacher, .toast { display: none !important; } .saved-record { box-shadow: none; border: 0; padding: 0; } }
 
 /* Painel da professora */
 .teacher { margin-top: 28px; border: 1px dashed var(--line-strong); border-radius: var(--radius); background: var(--surface); }
@@ -241,7 +252,10 @@ footer { padding-block: 32px calc(40px + env(safe-area-inset-bottom, 0px)); colo
 
 @media (max-width: 860px) {
   .steps-bar .lbl { display: none; }
-  .steps-bar button { padding: 8px 0; }
+  .steps-bar button { padding: 19px 0; margin: -11px 0; }
+  .icon-button { width: 44px; min-height: 44px; }
+  .conduct-toggle { min-height: 44px; }
+  .link-button { min-height: 44px; }
   .steps-bar .bar { height: 6px; }
   .conduct-toggle { display: inline-flex; }
   .rail-card.conduct { display: none; }
@@ -278,7 +292,7 @@ footer { padding-block: 32px calc(40px + env(safe-area-inset-bottom, 0px)); colo
     <div class="header-actions">
       <button id="viewSavedButton" class="button button-quiet" type="button" hidden>
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg>
-        <span><span class="label-long">Ver </span>registro salvo</span>
+        <span><span class="label-long">Ver </span>registros salvos</span>
       </button>
       <button id="themeButton" class="button button-quiet icon-button" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
@@ -359,9 +373,10 @@ footer { padding-block: 32px calc(40px + env(safe-area-inset-bottom, 0px)); colo
       </div>
     </div>
     <div id="savedContent" class="record-sections"></div>
+    <div id="savedList" class="saved-list" hidden></div>
   </section>
 
-  <details class="teacher" id="teacherPanel">
+  <details class="teacher" id="teacherPanel" hidden>
     <summary>
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>
       Ajustar conteúdo do formulário
@@ -649,7 +664,7 @@ const CONFIG = {
     salvoDetalhe: "Identificador {id} · salvo em {data}",
     novaNotificacao: "Nova notificação",
     exportarJson: "Exportar registro (.json)",
-    exportarImpressao: "Versão para impressão",
+    exportarImpressao: "Imprimir ficha",
     avisoSalvo: "Registro salvo neste navegador.",
     avisoSemArmazenamento: "Este navegador não permitiu guardar o registro. Ele fica visível só até fechar a página.",
     avisoLimpo: "Dados apagados deste navegador.",
@@ -701,7 +716,7 @@ const CONFIG = {
 (function () {
   "use strict";
 
-  const KEYS = { registro: "quedas-ilpi-registro-v2", config: "quedas-ilpi-config-v2", tema: "quedas-ilpi-tema" };
+  const KEYS = { registro: "quedas-ilpi-registro-v2", registros: "quedas-ilpi-registros-v2", config: "quedas-ilpi-config-v2", tema: "quedas-ilpi-tema" };
   const TIPOS = ["texto", "texto-longo", "data", "hora", "escolha-unica", "escolha-multipla"];
   const DEFAULT = JSON.parse(JSON.stringify(CONFIG));
 
@@ -848,7 +863,7 @@ const CONFIG = {
       const opts = f.opcoes.map((o, i) =>
         `<label class="choice"><input type="${type}" id="${id}-${i}" name="${esc(f.nome)}" value="${esc(o)}"><span>${esc(o)}</span></label>`
       ).join("");
-      const fs = `<fieldset class="field${half}" data-field="${esc(f.nome)}" aria-describedby="err-${esc(f.nome)}"${reqAttr}>
+      const fs = `<fieldset class="field${half}" data-field="${esc(f.nome)}" aria-describedby="err-${esc(f.nome)}"${type === "radio" ? ' role="radiogroup"' + reqAttr : ""}>
         <legend>${esc(f.rotulo)}${req}</legend>
         <div class="choice-grid${compact}">${opts}</div>${err}</fieldset>`;
       let html = f.mostrarSe ? `<div class="nested"${cond}>${hint}${fs}</div>` : fs;
@@ -1141,11 +1156,57 @@ const CONFIG = {
   $("#conductOverlay").addEventListener("click", (e) => { if (e.target.id === "conductOverlay") $("#conductOverlay").hidden = true; });
 
   /* ---------- salvar e visualizar ---------- */
+  /* Registros salvos neste navegador: lista (mais recente primeiro), até MAX_REG. */
+  const MAX_REG = 50;
+  let memList = null; // usada quando o navegador não deixa guardar
+  function readAll() {
+    if (memList) return memList;
+    const ok = (r) => r && Array.isArray(r.sections);
+    try {
+      const raw = store.get(KEYS.registros);
+      if (raw) { const l = JSON.parse(raw); if (Array.isArray(l)) return l.filter(ok); }
+    } catch (e) { /* ignora lista corrompida */ }
+    try { const r = JSON.parse(store.get(KEYS.registro) || "null"); if (ok(r)) return [r]; } catch (e) { /* nada */ }
+    return [];
+  }
+  function saveRecord(record) {
+    const list = [record, ...readAll().filter((r) => r.id !== record.id)].slice(0, MAX_REG);
+    const ok = store.set(KEYS.registros, JSON.stringify(list)) && store.set(KEYS.registro, JSON.stringify(record));
+    memList = ok ? null : list;
+    return ok;
+  }
   function readSaved() {
     if (lastRecord) return lastRecord;
-    const raw = store.get(KEYS.registro);
-    if (!raw) return null;
-    try { const r = JSON.parse(raw); return r && Array.isArray(r.sections) ? r : null; } catch (e) { return null; }
+    return readAll()[0] || null;
+  }
+  function recordSummary(r) {
+    const get = (label) => {
+      for (const s of r.sections || []) for (const x of s.rows || []) if (x.label === label) return x.value;
+      return "";
+    };
+    const first = (r.sections && r.sections[0] && r.sections[0].rows) || [];
+    return {
+      who: get("Nome do residente") || (first[0] && first[0].value) || r.id,
+      what: [get("Data"), get("Horário"), get("Local do evento")].filter((v) => v && v !== T().naoInformado).join(" · "),
+    };
+  }
+  function renderSavedList(current) {
+    const list = readAll();
+    const host = $("#savedList");
+    if (list.length < 1) { host.hidden = true; host.innerHTML = ""; return; }
+    host.hidden = false;
+    host.innerHTML = `<h3>Registros salvos neste navegador (${list.length})</h3>
+      <p>Toque em um registro para abri-lo. Os mais recentes aparecem primeiro.</p>
+      <ul>${list.map((r) => {
+        const s = recordSummary(r), d = new Date(r.savedAt);
+        const when = isNaN(d) ? "" : d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+        return `<li><button type="button" data-id="${esc(r.id)}"${current && current.id === r.id ? ' aria-current="true"' : ""}>
+          <span class="who">${esc(s.who)}</span><span class="what">${esc(s.what)}</span><span class="when">salvo em<br>${esc(when)}</span></button></li>`;
+      }).join("")}</ul>`;
+    $$("button[data-id]", host).forEach((btn) => btn.addEventListener("click", () => {
+      const r = readAll().find((x) => x.id === btn.dataset.id);
+      if (r) { lastRecord = r; showSaved(r); }
+    }));
   }
   function refreshSavedButton() { $("#viewSavedButton").hidden = !readSaved(); }
 
@@ -1156,6 +1217,7 @@ const CONFIG = {
     $("#savedContent").innerHTML = renderSections(record, false);
     const d = new Date(record.savedAt);
     $("#savedMeta").textContent = fill(T().salvoDetalhe, { id: record.id, data: isNaN(d) ? record.savedAt : d.toLocaleString("pt-BR") });
+    renderSavedList(record);
     $("#savedRecord").scrollIntoView({ behavior: "smooth", block: "start" });
     $("#savedTitle").focus({ preventScroll: true });
   }
@@ -1167,13 +1229,13 @@ const CONFIG = {
     }
     const record = collectRecord();
     lastRecord = record;
-    const ok = store.set(KEYS.registro, JSON.stringify(record));
+    const ok = saveRecord(record);
     toast(ok ? T().avisoSalvo : T().avisoSemArmazenamento);
     refreshSavedButton();
     showSaved(record);
   });
 
-  $("#viewSavedButton").addEventListener("click", () => showSaved(readSaved()));
+  $("#viewSavedButton").addEventListener("click", () => { lastRecord = null; showSaved(readSaved()); });
 
   function startNew() {
     form.reset();
@@ -1187,6 +1249,8 @@ const CONFIG = {
 
   function clearData() {
     store.del(KEYS.registro);
+    store.del(KEYS.registros);
+    memList = null;
     lastRecord = null;
     refreshSavedButton();
     startNew();
@@ -1221,8 +1285,25 @@ const CONFIG = {
   });
 
   /* ---------- exportação ---------- */
+  /* Fora do claude.ai: baixa o .json e abre a versão para impressão em nova aba. */
+  const blobDownloads = {
+    save({ filename, data }) {
+      const isHtml = /\.html$/i.test(filename);
+      const blob = new Blob([data], { type: isHtml ? "text/html;charset=utf-8" : "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      let opened = null;
+      if (isHtml) { try { opened = window.open(url, "_blank"); } catch (e) { opened = null; } }
+      if (!opened) {
+        const a = document.createElement("a");
+        a.href = url; a.download = filename; a.rel = "noopener";
+        document.body.appendChild(a); a.click(); a.remove();
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      return Promise.resolve(opened ? "Versão para impressão aberta em nova aba." : "Arquivo baixado: " + filename);
+    },
+  };
   function getDownloads() {
-    return Promise.resolve(null);
+    return Promise.resolve(blobDownloads);
   }
 
   function openCopyPanel(title, text, content) {
@@ -1252,8 +1333,8 @@ const CONFIG = {
       return;
     }
     try {
-      await dl.save({ filename, data: content });
-      toast("Arquivo enviado para download.");
+      const res = await dl.save({ filename, data: content });
+      toast(typeof res === "string" ? res : "Arquivo enviado para download.");
     } catch (err) {
       const code = err && err.code;
       if (code === "declined") toast("Download cancelado.");
